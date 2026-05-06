@@ -4,557 +4,130 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FALO Model Dish Registry v0.11</title>
-  <meta name="description" content="FALO Model Dish Registry v0.11，公開可讀的詳細版。GitHub-ready 的公開版，新增 PM11 與 IM 系列。">
+  <meta name="description" content="FALO Model Dish Registry v0.11，公開可讀的詳細版。GitHub-ready 的公開版，補入 Human-centered AI OS / AI Runtime / HITL 治理主軸。">
   <style>
     :root {
-      --bg:#f4f7fb;
-      --surface:#ffffff;
-      --soft:#edf3f8;
-      --line:#d6e0e8;
-      --text:#173042;
-      --muted:#5b7183;
-      --brand:#0f6d86;
-      --brand-soft:#dff2f6;
-      --accent:#8a4d0f;
-      --radius:22px;
-      --pill:999px;
-      --max:1200px;
-      --shadow:0 18px 44px rgba(16,42,58,.08);
+      --bg:#f6f4ef;
+      --card:#ffffff;
+      --line:#d7ddd4;
+      --text:#18322b;
+      --muted:#53655f;
+      --brand:#295c4f;
+      --brand-soft:#eaf3ee;
+      --shadow:0 14px 32px rgba(26,52,45,.08);
+      --radius:20px;
     }
     * { box-sizing:border-box; }
-    body {
-      margin:0;
-      font-family:"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(15,109,134,.10), transparent 24%),
-        radial-gradient(circle at top right, rgba(138,77,15,.08), transparent 22%),
-        var(--bg);
-      color:var(--text);
-      line-height:1.72;
-    }
-    h1,h2,h3,p { margin:0; }
-    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
-    .page { width:min(calc(100% - 24px), var(--max)); margin:0 auto; padding:24px 0 48px; }
-    .hero,.panel {
-      background:rgba(255,255,255,.96);
-      border:1px solid var(--line);
-      border-radius:24px;
-      box-shadow:var(--shadow);
-    }
-    .hero { padding:28px; }
-    .eyebrow {
-      display:inline-flex;
-      padding:7px 12px;
-      border-radius:var(--pill);
-      background:var(--brand-soft);
-      color:var(--brand);
-      font-weight:700;
-      font-size:.92rem;
-    }
-    h1 {
-      margin-top:18px;
-      font-size:clamp(2rem,4vw,3.4rem);
-      line-height:1.12;
-    }
-    .hero p { margin-top:12px; max-width:900px; color:var(--muted); }
-    .meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-top:20px; }
-    .meta div { background:var(--soft); padding:14px 16px; border-radius:16px; font-weight:600; }
-    .tabs { margin-top:22px; }
-    .tabs input { display:none; }
-    .tab-labels { display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:10px; }
-    .tab-labels label {
-      padding:12px 14px;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:14px;
-      cursor:pointer;
-      text-align:center;
-      font-weight:700;
-    }
-    .tab-content { display:none; margin-top:18px; }
-    #tab-overview:checked ~ .tab-panels .panel-overview,
-    #tab-upgrade:checked ~ .tab-panels .panel-upgrade,
-    #tab-history:checked ~ .tab-panels .panel-history,
-    #tab-pm11:checked ~ .tab-panels .panel-pm11,
-    #tab-im-system:checked ~ .tab-panels .panel-im-system,
-    #tab-im-modules:checked ~ .tab-panels .panel-im-modules,
-    #tab-full-registry:checked ~ .tab-panels .panel-full-registry,
-    #tab-privacy:checked ~ .tab-panels .panel-privacy,
-    #tab-evidence:checked ~ .tab-panels .panel-evidence,
-    #tab-affected:checked ~ .tab-panels .panel-affected { display:block; }
-    #tab-overview:checked ~ .tab-labels label[for="tab-overview"],
-    #tab-upgrade:checked ~ .tab-labels label[for="tab-upgrade"],
-    #tab-history:checked ~ .tab-labels label[for="tab-history"],
-    #tab-pm11:checked ~ .tab-labels label[for="tab-pm11"],
-    #tab-im-system:checked ~ .tab-labels label[for="tab-im-system"],
-    #tab-im-modules:checked ~ .tab-labels label[for="tab-im-modules"],
-    #tab-full-registry:checked ~ .tab-labels label[for="tab-full-registry"],
-    #tab-privacy:checked ~ .tab-labels label[for="tab-privacy"],
-    #tab-evidence:checked ~ .tab-labels label[for="tab-evidence"],
-    #tab-affected:checked ~ .tab-labels label[for="tab-affected"] {
-      background:var(--brand-soft);
-      color:var(--brand);
-      border-color:rgba(15,109,134,.25);
-    }
-    .panel { padding:24px; margin-top:22px; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
-    .card {
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(242,247,251,.98));
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:18px;
-    }
-    .card strong { display:block; font-size:1.04rem; }
-    .card p { margin-top:10px; color:var(--muted); }
-    .list { margin:0; padding-left:1.2rem; color:var(--muted); }
-    .list li + li { margin-top:8px; }
-    .table-wrap { overflow-x:auto; margin-top:16px; }
-    table { width:100%; border-collapse:collapse; min-width:720px; }
-    th,td { padding:12px 14px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
-    th { background:var(--soft); font-size:.95rem; }
-    .footer { margin-top:24px; color:var(--muted); padding:0 4px; }
-    .note { margin-top:14px; padding:14px 16px; border-radius:16px; background:rgba(223,242,246,.7); border:1px solid rgba(15,109,134,.16); color:var(--text); }
-    .series-list { margin-top:18px; display:grid; gap:14px; }
+    body { margin:0; font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; background:linear-gradient(180deg,#fbfaf7,#f2f6f1); color:var(--text); line-height:1.7; }
+    .container { width:min(1220px, calc(100% - 32px)); margin:0 auto; padding:24px 0 64px; }
+    .search-shell, .hero, .tabs, .note { background:rgba(255,255,255,.94); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
+    .search-shell { position:sticky; top:10px; z-index:30; padding:14px 16px; backdrop-filter:blur(14px); margin-bottom:18px; }
+    .search-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .search-row input { flex:1 1 280px; padding:14px 16px; border-radius:14px; border:1px solid var(--line); font-size:15px; }
+    .search-row button { border:0; background:var(--brand); color:#fff; padding:12px 16px; border-radius:12px; cursor:pointer; }
+    .search-meta { display:flex; justify-content:space-between; gap:10px; margin-top:8px; font-size:13px; color:var(--muted); flex-wrap:wrap; }
+    .hero { padding:28px; margin-bottom:18px; background:linear-gradient(135deg,#fbfffc,#eff6f1); }
+    .eyebrow { display:inline-block; padding:6px 10px; border-radius:999px; background:var(--brand-soft); color:var(--brand); font-weight:700; font-size:12px; letter-spacing:.04em; }
+    h1 { margin:16px 0 10px; font-size:clamp(2rem,4vw,3.6rem); line-height:1.08; }
+    h2 { margin:0 0 10px; font-size:clamp(1.35rem,2.2vw,2rem); }
+    p { margin:0; }
+    .meta, .grid { display:grid; gap:14px; }
+    .meta { grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); margin-top:18px; }
+    .meta div, .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:16px; }
+    .card strong { display:block; margin-bottom:8px; }
+    .tabs { padding:18px; }
+    .tabs input[type=radio] { display:none; }
+    .tab-labels { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+    .tab-labels label { padding:10px 14px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer; font-weight:700; color:var(--muted); }
+    .tab-panels .panel { display:none; }
+    #tab-overview:checked ~ .tab-labels label[for="tab-overview"], #tab-upgrade:checked ~ .tab-labels label[for="tab-upgrade"], #tab-history:checked ~ .tab-labels label[for="tab-history"], #tab-governance:checked ~ .tab-labels label[for="tab-governance"], #tab-pm11:checked ~ .tab-labels label[for="tab-pm11"], #tab-im-system:checked ~ .tab-labels label[for="tab-im-system"], #tab-im-modules:checked ~ .tab-labels label[for="tab-im-modules"], #tab-full-registry:checked ~ .tab-labels label[for="tab-full-registry"], #tab-privacy:checked ~ .tab-labels label[for="tab-privacy"], #tab-evidence:checked ~ .tab-labels label[for="tab-evidence"], #tab-affected:checked ~ .tab-labels label[for="tab-affected"] { background:var(--brand); color:#fff; border-color:var(--brand); }
+    #tab-overview:checked ~ .tab-panels .panel-overview, #tab-upgrade:checked ~ .tab-panels .panel-upgrade, #tab-history:checked ~ .tab-panels .panel-history, #tab-governance:checked ~ .tab-panels .panel-governance, #tab-pm11:checked ~ .tab-panels .panel-pm11, #tab-im-system:checked ~ .tab-panels .panel-im-system, #tab-im-modules:checked ~ .tab-panels .panel-im-modules, #tab-full-registry:checked ~ .tab-panels .panel-full-registry, #tab-privacy:checked ~ .tab-panels .panel-privacy, #tab-evidence:checked ~ .tab-panels .panel-evidence, #tab-affected:checked ~ .tab-panels .panel-affected { display:block; }
+    .grid { grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+    .note { margin-top:16px; padding:16px; color:var(--muted); }
+    .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:18px; background:#fff; }
+    table { width:100%; border-collapse:collapse; min-width:760px; }
+    th, td { padding:12px 14px; border-bottom:1px solid #e8ece7; vertical-align:top; text-align:left; }
+    th { background:#f3f7f4; }
+    .series-list { display:grid; gap:14px; margin-top:18px; }
     .series-detail { background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(242,247,251,.98)); border:1px solid var(--line); border-radius:18px; padding:16px 18px; }
     .series-detail summary { cursor:pointer; font-weight:700; color:var(--text); }
     .series-detail summary span { color:var(--muted); font-weight:600; }
     .series-detail p { margin-top:10px; color:var(--muted); }
-    @media (max-width:720px) {
-      .page { width:min(calc(100% - 16px), var(--max)); }
-      .hero,.panel { padding:20px; border-radius:20px; }
-    }
-  
-    .search-shell {
-      position: sticky;
-      top: 12px;
-      z-index: 60;
-      margin: 0 0 18px;
-      display: grid;
-      gap: 8px;
-    }
-    .search-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,.96);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-    .search-icon {
-      color: var(--brand);
-      font-weight: 700;
-      font-size: 1rem;
-      flex: 0 0 auto;
-    }
-    .search-bar input {
-      flex: 1;
-      min-width: 0;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--text);
-      font: inherit;
-    }
-    .search-bar input::placeholder {
-      color: var(--muted);
-    }
-    .search-bar button {
-      border: 1px solid rgba(15,109,134,.16);
-      background: var(--brand-soft);
-      color: var(--brand);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      flex: 0 0 auto;
-    }
-    .search-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 0 4px;
-      color: var(--muted);
-      font-size: .92rem;
-    }
-    .search-hidden {
-      display: none !important;
-    }
-    .search-highlight {
-      outline: 2px solid rgba(15,109,134,.14);
-      background: rgba(223,242,246,.32) !important;
-      scroll-margin-top: 96px;
-    }
-    body.search-mode .tab-content {
-      display: block !important;
-    }
-    body.search-mode .tab-labels label {
-      opacity: .72;
-    }
-    @media (max-width: 720px) {
-      .search-shell {
-        top: 8px;
-        margin-bottom: 14px;
-      }
-      .search-bar {
-        padding: 10px 12px;
-      }
-      .search-meta {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-
+    code { background:#eef3ef; padding:2px 6px; border-radius:8px; }
+    .footer { text-align:center; color:var(--muted); margin-top:22px; font-size:14px; }
+    .search-hidden { display:none !important; }
+    .search-mode .tab-content { display:block !important; }
+    @media (max-width:720px) { .container { width:min(100% - 20px, 1220px); } .hero, .tabs, .search-shell { padding:16px; } .tab-labels { overflow:auto; padding-bottom:6px; flex-wrap:nowrap; } .tab-labels label { white-space:nowrap; } table { min-width:640px; } }
   </style>
 </head>
 <body>
-  <main class="page">
-
-      <section class="search-shell" data-universal-search>
-        <div class="search-bar">
-          <span class="search-icon" aria-hidden="true">⌕</span>
-          <input type="search" placeholder="搜尋系列、代碼、名稱、用途、備註..." aria-label="萬能關鍵字搜尋">
-          <button type="button" data-search-clear>清除</button>
-        </div>
-        <div class="search-meta">
-          <span data-search-status>顯示全部內容</span>
-          <span>萬能欄位搜尋</span>
-        </div>
-      </section>
-
+  <div class="container">
+    <section class="search-shell">
+      <div class="search-row">
+        <input type="search" placeholder="搜尋系列、代碼、名稱、用途、備註..." aria-label="萬能關鍵字搜尋">
+        <button type="button" data-search-clear>清除</button>
+      </div>
+      <div class="search-meta"><span data-search-status>顯示全部內容</span><span>萬能欄位搜尋</span></div>
+    </section>
     <section class="hero">
       <span class="eyebrow">Registry Release v0.11</span>
       <h1>FALO Model Dish Registry</h1>
-      <p>這是一個可放 GitHub 的公開可讀詳細版，保留原版的結構、命名與教學密度，只收斂不必要的私有資訊。兩種版本都應詳細保留模型菜分類與細節，差別只在公開版的精度控管。這一版同時新增 <code>PM11</code> 與完整 <code>IM</code> 系列，讓 FALO 的顧問、教材與場景系統盤面更完整。</p>
-      <div class="meta">
-        <div>Release Version<br><strong>v0.11</strong></div>
-        <div>Edition<br><strong>公開可讀的詳細版</strong></div>
-        <div>Major Additions<br><strong>PM11 + IM01-IM09</strong></div>
-        <div>Signature<br><strong>FALO x Force Cheng 2026/5/6</strong></div>
-      </div>
+      <p>這是一個可放 GitHub 的公開可讀詳細版，保留原版的結構、命名與教學密度，只收斂不必要的私有資訊。這一版補入 Human-centered AI OS / AI Runtime / HITL 執行治理主軸，讓 FALO 不只像 AI Task OS，也更像有邊界的人類中心 AI Operating System。</p>
+      <div class="meta"><div>Release Version<br><strong>v0.11</strong></div><div>Edition<br><strong>公開可讀的詳細版</strong></div><div>Major Additions<br><strong>PM12-PM16 + CC27-CC31</strong></div><div>Signature<br><strong>FALO x Force Cheng 2026/5/6</strong></div></div>
     </section>
-
     <section class="tabs">
-      <input type="radio" name="tabs" id="tab-overview" checked>
-      <input type="radio" name="tabs" id="tab-upgrade">
-      <input type="radio" name="tabs" id="tab-history">
-      <input type="radio" name="tabs" id="tab-pm11">
-      <input type="radio" name="tabs" id="tab-im-system">
-      <input type="radio" name="tabs" id="tab-im-modules">
-      <input type="radio" name="tabs" id="tab-full-registry">
-      <input type="radio" name="tabs" id="tab-privacy">
-      <input type="radio" name="tabs" id="tab-evidence">
-      <input type="radio" name="tabs" id="tab-affected">
-
-      <div class="tab-labels">
-        <label for="tab-overview">Overview</label>
-        <label for="tab-upgrade">Upgrade Notes</label>
-        <label for="tab-history">Version History</label>
-        <label for="tab-pm11">PM11 Delivery</label>
-        <label for="tab-im-system">IM System</label>
-        <label for="tab-im-modules">IM Modules</label>
-        <label for="tab-full-registry">Full Registry</label>
-        <label for="tab-privacy">Public Detail</label>
-        <label for="tab-evidence">Evidence</label>
-        <label for="tab-affected">Affected Entries</label>
-      </div>
-
+      <input type="radio" name="tabs" id="tab-overview" checked><input type="radio" name="tabs" id="tab-upgrade"><input type="radio" name="tabs" id="tab-history"><input type="radio" name="tabs" id="tab-governance"><input type="radio" name="tabs" id="tab-pm11"><input type="radio" name="tabs" id="tab-im-system"><input type="radio" name="tabs" id="tab-im-modules"><input type="radio" name="tabs" id="tab-full-registry"><input type="radio" name="tabs" id="tab-privacy"><input type="radio" name="tabs" id="tab-evidence"><input type="radio" name="tabs" id="tab-affected">
+      <div class="tab-labels"><label for="tab-overview">Overview</label><label for="tab-upgrade">Upgrade Notes</label><label for="tab-history">Version History</label><label for="tab-governance">AI OS Governance</label><label for="tab-pm11">PM11 Delivery</label><label for="tab-im-system">IM System</label><label for="tab-im-modules">IM Modules</label><label for="tab-full-registry">Full Registry</label><label for="tab-privacy">Public Detail</label><label for="tab-evidence">Evidence</label><label for="tab-affected">Affected Entries</label></div>
       <div class="tab-panels">
-        <section class="panel tab-content panel-overview">
-          <h2>版本定位</h2>
-          <div class="grid" style="margin-top:16px;">
-            <article class="card">
-              <strong>這不是重寫版</strong>
-              <p>v0.11 高度參考原版內容與結構，保留 FALO Registry 的原始敘事與教學密度。</p>
-            </article>
-            <article class="card">
-              <strong>這是公開可讀的詳細版</strong>
-              <p>主要收斂的是本機絕對路徑、私有執行痕跡與不必要的環境識別資訊，同時保留完整的分類與敘事密度。</p>
-            </article>
-            <article class="card">
-              <strong>不是薄摘要</strong>
-              <p>公開版與個人版都要詳細放進模型菜分類與細節；公開版只降低精度，不降低內容厚度。</p>
-            </article>
-            <article class="card">
-              <strong>新增主軸</strong>
-              <p>這次把 AI 交付橋接能力收成 <code>PM11</code>，並將 <code>local-first-im</code> 正式升級成完整 <code>IM</code> 系列。</p>
-            </article>
-          </div>
-          <div class="note">公開版的原則不是把模型菜寫薄，而是維持完整分類、能力拆解、關聯與用途，再把敏感精度降一階。</div>
-        </section>
-
-        <section class="panel tab-content panel-upgrade">
-          <h2>v0.11 升版重點</h2>
-          <div class="grid" style="margin-top:16px;">
-            <article class="card">
-              <strong>新增 PM11</strong>
-              <p>把 <code>MCP / SSH / GitHub push</code> 橋接能力整理成 FALO 可提供的顧問服務、教材模組與元件型模型菜。</p>
-            </article>
-            <article class="card">
-              <strong>新增 IM 系列</strong>
-              <p>將 <code>local-first-im</code> 納入為一條完整系統線，並更明確收斂成 <code>Local-first IM Workbench</code> 的主系統定位。</p>
-            </article>
-            <article class="card">
-              <strong>補概念條目</strong>
-              <p>新增 <code>CC25</code> 與 <code>CC26</code>，分別承接 AI 交付橋接與 Local-first 協作邊界。</p>
-            </article>
-            <article class="card">
-              <strong>公開版邊界</strong>
-              <p>保留原版內容密度與版本脈絡，但將公開版改寫成 GitHub 可直接展示的公開可讀詳細版。</p>
-            </article>
-            <article class="card">
-              <strong>詳細度原則</strong>
-              <p>不管公開版或個人版，都應把各模型菜分類與細節放進去；公開版只是不放得太精確。</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="panel tab-content panel-history">
-          <h2>已知升版歷程</h2>
-          <div class="grid" style="margin-top:16px;">
-            <article class="card"><strong>v0.01</strong><p>建立 Catalog Layer 基礎版本，整理 MM、BB、NewsOps 三大來源，並用 System / Module / Dish 做第一輪清單化。</p></article>
-            <article class="card"><strong>v0.07</strong><p>把母表正式化成 Excel / Markdown / HTML，統一 AA、BB、MM、CC、MMM、NewsOps 的 registry 欄位與展示格式。</p></article>
-            <article class="card"><strong>v0.08</strong><p>將 FALO 從模型菜集合升級成 AI Task OS 導向，加入雙 NotebookLM、Skill-first、Primary / Alternative、PM / FS 主軸。</p></article>
-            <article class="card"><strong>v0.09b</strong><p>將教材頁納入 patch，新增 TEACH 系列與 PM / CC 的教學映射。</p></article>
-            <article class="card"><strong>v0.09c</strong><p>新增 ASSET 系列，將 Sampuru AI Solution Map 登錄為 Visual Asset / AI Solution Map 型模型菜。</p></article>
-            <article class="card"><strong>v0.10</strong><p>以 <code>v0.09c</code> 為基底整理發佈版，建立備份與對外交付版本，並持續收納新候選條目。</p></article>
-            <article class="card"><strong>v0.11</strong><p>推出高度參考原版的 GitHub-ready 公開可讀詳細版，新增 <code>PM11</code>、完整 <code>IM</code> 系列與公開版精度邊界。</p></article>
-          </div>
-        </section>
-
-        <section class="panel tab-content panel-pm11">
-          <h2>PM11｜AI Delivery Bridge</h2>
-          <div class="grid" style="margin-top:16px;">
-            <article class="card">
-              <strong>一句話定位</strong>
-              <p>讓 FALO 能透過 <code>MCP</code>、<code>SSH</code> 與 <code>GitHub push</code>，把對話式 AI 任務橋接到真實工作環境與交付流程。</p>
-            </article>
-            <article class="card">
-              <strong>適用環境</strong>
-              <p><code>ChatGPT Codex</code>、<code>Claude Cowork</code>，以及後續可擴充的對話式 AI 執行環境。</p>
-            </article>
-            <article class="card">
-              <strong>服務定位</strong>
-              <p>這條模型菜可以同時對應顧問服務、教材模組與可組件化的橋接能力。</p>
-            </article>
-            <article class="card">
-              <strong>重要邊界</strong>
-              <p>重點不是工具綁定，而是 AI 如何從對話走到交付。</p>
-            </article>
-          </div>
-          <div class="note">FALO 在這裡扮演的是「橋接層」：幫使用者把任務、規則、工具存取與交付動作連起來，而不是只停在對話或提示詞。</div>
-        </section>
-
-        <section class="panel tab-content panel-im-system">
-          <h2>IM01｜Local-first IM Workbench</h2>
-          <div class="grid" style="margin-top:16px;">
-            <article class="card">
-              <strong>主系統定位</strong>
-              <p>把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。</p>
-            </article>
-            <article class="card">
-              <strong>教學價值</strong>
-              <p>初學者可以透過這條線看懂 Browser Client、Local Server、Identity、Message Routing 與本地紀錄的關係。</p>
-            </article>
-            <article class="card">
-              <strong>顧問價值</strong>
-              <p>這不是單一聊天室功能，而是一個可拆元件、可治理、可延後上雲的場景型系統。</p>
-            </article>
-            <article class="card">
-              <strong>核心邊界</strong>
-              <p><code>Local-first IM: 地端即時，雲端延遲保存。</code></p>
-            </article>
-          </div>
-          <div class="grid" style="margin-top:16px;">
-            <article class="card">
-              <strong>Dev 版</strong>
-              <p><code>static/index.html</code> 是 Local-first IM Dev 實作介面版，偏操作、測試、稽核與多人 / 多 client 驗證。</p>
-            </article>
-            <article class="card">
-              <strong>Overview 版</strong>
-              <p><code>docs/external-overview.html</code> 是外部說明版，偏非工程讀者、教學展示與系統定位說明。</p>
-            </article>
-            <article class="card">
-              <strong>關聯主題</strong>
-              <p>Communication OS、Prompt Manager、Local Data Hub、GAS Sync、AI Logging Shell、HITL。</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="panel tab-content panel-im-modules">
-          <h2>IM 系列子元件</h2>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Code</th>
-                  <th>名稱</th>
-                  <th>類型</th>
-                  <th>一句話用途</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td><code>IM02</code></td><td>Local-first IM Dev Client</td><td>Module</td><td>Local-first IM Dev 實作介面版，用來測試多人、多 client、AI 角色、Prompt 管理、資料閉環與延遲同步。</td></tr>
-                <tr><td><code>IM03</code></td><td>Local IM Server</td><td>Module</td><td>作為地端中樞，負責接收 client 連線、管理在線狀態、轉送訊息並立即寫入本地紀錄。</td></tr>
-                <tr><td><code>IM04</code></td><td>Identity Module</td><td>Module</td><td>把 <code>user_id</code>、<code>client_id</code> 與 session trace 分開管理，讓身份、登入入口與稽核線索可以被清楚教學與追蹤。</td></tr>
-                <tr><td><code>IM05</code></td><td>Message Router</td><td>Module</td><td>判斷訊息是 room message 還是 direct message，並把它送到對應的 client 或 room 成員。</td></tr>
-                <tr><td><code>IM06</code></td><td>Local Message Log</td><td>Module</td><td>把本地訊息紀錄作為第一真實來源，支援後續查詢、匯出與未來批量同步。</td></tr>
-                <tr><td><code>IM07</code></td><td>Admin View / Admin API</td><td>Module</td><td>提供開發測試 / 稽核視角，讓使用者能查看在線狀態、全域紀錄、連線資訊、IP / session / room 狀態與備份資訊。</td></tr>
-                <tr><td><code>IM08</code></td><td>Personal Prompt Manager</td><td>Module</td><td>把 Prompt 新增、分類、搜尋、匯入匯出與帶入聊天室整合在個人 Prompt 管理器中。</td></tr>
-                <tr><td><code>IM09</code></td><td>Backup Sync Queue</td><td>Module</td><td>把 JSON / Excel 匯出匯入、本機回灌、GAS Lite 部署包與 Google Sheet 延遲同步整理成資料閉環隊列。</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="note">這條 Workbench 的核心能力可概括為六組：IM / Room / Direct Message、通訊錄與備註、Prompt 管理器、資料閉環、GAS Lite / Google Sheet 備份，以及開發測試 / 稽核視角。</div>
-        </section>
-
-                <section class="panel tab-content panel-full-registry">
-          <h2>完整分類與明細列表</h2>
-          <p style="margin-top:12px; color:var(--muted);">這一頁不是只有升版摘要，而是把目前 <code>v0.11</code> 已知模型菜盤面按系列完整展開。公開版也盡量保留分類、模組、能力、用途與註記；差別只在精度，不在內容厚度。</p>
-          <div class="grid" style="margin-top:16px;"><article class="card"><strong>AA</strong><p>12 entries</p><p>作為模型菜總目錄的頂層樓層分類，幫助讀者先看懂盤面，再進入具體模型菜。</p></article><article class="card"><strong>BB</strong><p>13 entries</p><p>偏顧問與教學展示的實戰模型菜，可直接對應方案、課程與導入情境。</p></article><article class="card"><strong>MM</strong><p>60 entries</p><p>目前已成形、已命名、可教學、可產品化的既有核心模型菜資產。</p></article><article class="card"><strong>CC</strong><p>26 entries</p><p>概念、洞見、設計原則與模式類模型菜，負責承接教學與方法論。</p></article><article class="card"><strong>MMM</strong><p>7 entries</p><p>多模態、影音、Local AI 與前沿能力線，偏應用能力與實驗軌。</p></article><article class="card"><strong>PM</strong><p>7 entries</p><p>FALO 作為 AI Task OS 的主軸系列，承接任務系統、決策與交付橋接。</p></article><article class="card"><strong>FS</strong><p>0 entries</p><p>Ground Truth 與 Evidence Layer 的保留區，目前欄位已預留，但本版尚未展開具名條目。</p></article><article class="card"><strong>TEACH</strong><p>3 entries</p><p>從教材、案例、教學頁映射出的模型菜，負責把概念轉成可教內容。</p></article><article class="card"><strong>ASSET</strong><p>2 entries</p><p>展示型、視覺型、語意導航型模型菜資產，偏 showcase、教學入口與外部說明價值。</p></article><article class="card"><strong>TRACE</strong><p>0 entries</p><p>AI 學習履歷與 GitHub / Pages 資產治理保留區，本版欄位已規劃，後續再補實體條目。</p></article><article class="card"><strong>NewsOps</strong><p>18 entries</p><p>專案型系統族群，涵蓋 ETL、監測、編修、輸出與審核的整條運作鏈。</p></article><article class="card"><strong>IM</strong><p>9 entries</p><p>Local-first IM 與協作工作台系統，承接 communication OS、prompt 管理與資料閉環。</p></article></div>
-          <div class="series-list"><details class="series-detail"><summary>AA 系列｜Catalog Floors / Department Categories <span>(12)</span></summary><p>作為模型菜總目錄的頂層樓層分類，幫助讀者先看懂盤面，再進入具體模型菜。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>AA01</code></td><td>知識收集與整理</td><td>Category</td><td>Catalog</td><td>收集資料、筆記、來源、附件與初步整理</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA02</code></td><td>知識庫與檢索</td><td>Category</td><td>Catalog</td><td>知識庫、FAQ、RAG、文件查找與檢索</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA03</code></td><td>Prompt 與 AI 操作輔助</td><td>Category</td><td>Catalog</td><td>Prompt、AI 操作殼、指令與互動入口</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA04</code></td><td>文件生成與寫作</td><td>Category</td><td>Catalog</td><td>企畫書、報告、SOP、改稿與輸出</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA05</code></td><td>教學訓練與新人帶領</td><td>Category</td><td>Catalog</td><td>onboarding、教材、主管帶員</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA06</code></td><td>專案管理與協作</td><td>Category</td><td>Catalog</td><td>任務、專案、協作、排程</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA07</code></td><td>行政營運效率</td><td>Category</td><td>Catalog</td><td>日常效率、行政回覆、整理</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA08</code></td><td>業務行銷與對外溝通</td><td>Category</td><td>Catalog</td><td>對外提案、簡報、行銷文案</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA09</code></td><td>治理、稽核與紀錄</td><td>Category</td><td>Catalog</td><td>治理、稽核、留痕、權限與追蹤</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA10</code></td><td>資料保護與去識別化</td><td>Category</td><td>Catalog</td><td>加解密、去識別化、交換保護</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA11</code></td><td>AI Agent / 自動化工作流</td><td>Category</td><td>Catalog</td><td>Agent、工作流、自動化與 orchestration</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA12</code></td><td>個人工作台與一人公司</td><td>Category</td><td>Catalog</td><td>個人知識助手、顧問工作台、一人公司</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>BB 系列｜Consulting / Teaching Use Cases <span>(13)</span></summary><p>偏顧問與教學展示的實戰模型菜，可直接對應方案、課程與導入情境。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>BB01</code></td><td>公司知識庫建立（KM）</td><td>System</td><td>Execution</td><td>企業知識庫建立與累積</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB02</code></td><td>投標企畫加速（ETL）</td><td>System</td><td>Execution</td><td>投標文件與提案內容加速生成</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB03</code></td><td>新人快速上手（Onboarding）</td><td>System</td><td>Execution</td><td>新進人員學習與上手系統</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB04</code></td><td>主管帶員減壓（管理）</td><td>System</td><td>Execution</td><td>減輕主管反覆帶員負擔</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB05</code></td><td>員工效率提升（日常）</td><td>System</td><td>Execution</td><td>用 AI 提升日常工作效率</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB06</code></td><td>專案問題解決（AI 陪跑）</td><td>System</td><td>Execution</td><td>專案問題拆解與 AI 陪跑</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB07</code></td><td>結案報告生成（ETL）</td><td>System</td><td>Execution</td><td>專案結案報告生成</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB08</code></td><td>Source Inbox（資料收件匣）</td><td>Module</td><td>Execution</td><td>外部資料與輸入內容收件匣</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB09</code></td><td>Prompt Manager</td><td>Module</td><td>Execution</td><td>教學與顧問場景的 Prompt 資產管理</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB10</code></td><td>KM Lite</td><td>Module</td><td>Execution</td><td>輕量知識管理能力</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB11</code></td><td>Logging Shell</td><td>Module</td><td>Execution</td><td>操作流程記錄與追蹤</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB12</code></td><td>輸出引擎</td><td>Module</td><td>Execution</td><td>輸出文件、報告與交付成果</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB13</code></td><td>Cloud Calendar PM</td><td>System</td><td>Execution</td><td>以 Google Calendar 為核心的輕量雲 PM 中樞</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>MM 系列｜Core Named Model Dishes <span>(60)</span></summary><p>目前已成形、已命名、可教學、可產品化的既有核心模型菜資產。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>MM01</code></td><td>新聞探索與知識流動系統</td><td>System</td><td>Execution</td><td>整理新聞蒐集、理解與知識流動的完整系統</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM02</code></td><td>AI 操作殼（Logging Shell）</td><td>Module</td><td>Execution</td><td>AI 操作過程的記錄、追蹤與操作介面</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM03</code></td><td>Local Data Hub</td><td>Module</td><td>Execution</td><td>本地資料管理中心／資料底盤</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM04</code></td><td>Google AI Search Logging</td><td>Dish</td><td>Execution</td><td>記錄 Google AI Search 查詢與結果</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM05</code></td><td>雲指令小幫手（Cloud Prompt Assistant）</td><td>Dish</td><td>Execution</td><td>快速調用與管理雲端提示詞或指令</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM06</code></td><td>Prompt 管理器（Prompt Asset Manager）</td><td>Module</td><td>Execution</td><td>Prompt 資產整理、重用與教學化</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。 本版補充：若延伸為 Prompt Workbench，定位應視為 Module，負責 Task → Prompt 的編譯，而非核心系統。</td><td>Working Draft</td></tr><tr><td><code>MM07</code></td><td>Source Inbox</td><td>Module</td><td>Execution</td><td>外部來源資料入口</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM08</code></td><td>Smart KM Core</td><td>System</td><td>Execution</td><td>知識管理核心系統</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM09</code></td><td>Local RAG Lite</td><td>Module</td><td>Execution</td><td>輕量版本地 RAG 能力</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM10</code></td><td>Trusted Session Governance</td><td>Module</td><td>Execution</td><td>AI session 的可信邊界與使用規則</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM11</code></td><td>Query Governance</td><td>Dish</td><td>Execution</td><td>查詢行為與檢索規範管理</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM12</code></td><td>AI 對話紀錄與治理系統</td><td>System</td><td>Execution</td><td>對話內容記錄、追蹤、稽核與教學</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM13</code></td><td>Sidebar Logging Shell</td><td>Module</td><td>Execution</td><td>側邊欄形式的操作殼</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM14</code></td><td>去識別化 / 加解密系統</td><td>System</td><td>Execution</td><td>資料去識別化與加解密保護</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM15</code></td><td>AI Usage Governance</td><td>System</td><td>Execution</td><td>AI 使用方式、風險與治理規則</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM16</code></td><td>Information Collection Center</td><td>System</td><td>Execution</td><td>資訊搜集中樞</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM17</code></td><td>NewsOps System</td><td>System</td><td>Execution</td><td>新聞 ETL + Scheduler + Monitor 聯合作戰系統</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM18</code></td><td>Crawler Center</td><td>Module</td><td>Execution</td><td>抓取外部新聞或資訊來源</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM19</code></td><td>Scheduler Center</td><td>Module</td><td>Execution</td><td>排程與任務執行時機管理</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM20</code></td><td>Monitor Center</td><td>Module</td><td>Execution</td><td>監控系統狀態、流程與異常</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM21</code></td><td>Crawler Result Center（CRC）</td><td>Module</td><td>Execution</td><td>集中管理爬取結果</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM22</code></td><td>Intake Layer</td><td>Module</td><td>Execution</td><td>原始輸入資料的接收與分流</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM23</code></td><td>Translation Layer</td><td>Dish</td><td>Execution</td><td>翻譯內容</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM24</code></td><td>Summarization Layer</td><td>Dish</td><td>Execution</td><td>內容摘要</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM25</code></td><td>Rewrite Layer</td><td>Dish</td><td>Execution</td><td>改寫內容</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM26</code></td><td>Proposal / Rollback Layer</td><td>Dish</td><td>Execution</td><td>提案與回退能力</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM27</code></td><td>Duplicate Detection Layer</td><td>Dish</td><td>Execution</td><td>重複內容檢查</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM28</code></td><td>Queue / Processing View Layer</td><td>Dish</td><td>Execution</td><td>任務排隊與處理狀態視圖</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM29</code></td><td>Export Layer</td><td>Dish</td><td>Execution</td><td>結果輸出</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM30</code></td><td>Delivery Layer</td><td>Dish</td><td>Execution</td><td>將內容送往目標端</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM31</code></td><td>Action Log / Audit Layer</td><td>Dish</td><td>Execution</td><td>操作與審核軌跡</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM32</code></td><td>Browser AI Workbench</td><td>System</td><td>Execution</td><td>瀏覽器內 AI 前處理工作台</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM33</code></td><td>Content Extraction Engine</td><td>Module</td><td>Execution</td><td>DOM / 選取 / HTML / 圖片擷取</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM34</code></td><td>Task-first UI Engine</td><td>Module</td><td>Execution</td><td>以任務卡為主入口的側邊 UI</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM35</code></td><td>Built-in AI Adapter</td><td>Module</td><td>Execution</td><td>內建 AI 優先、本地先、必要時升級雲端</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM36</code></td><td>KM Index Connector</td><td>Module</td><td>Execution</td><td>Source / Index / Card / Relation 連接</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM37</code></td><td>Workbench Buffer</td><td>Module</td><td>Execution</td><td>人機協作的中間緩衝區</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM38</code></td><td>Structured Export Engine</td><td>Module</td><td>Execution</td><td>JSON / CSV / Markdown / HTML 匯出</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM39</code></td><td>Knowledge Card Generator</td><td>Dish</td><td>Execution</td><td>知識卡生成</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM40</code></td><td>Metadata Extractor</td><td>Dish</td><td>Execution</td><td>metadata 與欄位抽取</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM41</code></td><td>Multi-mode Content Cleaner</td><td>Dish</td><td>Execution</td><td>精確版 / 完整版內容清理</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM42</code></td><td>Image Selection &amp; Export</td><td>Dish</td><td>Execution</td><td>圖片擷取、勾選與輸出</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM43</code></td><td>LAN Secure Agent Mesh</td><td>System</td><td>Execution</td><td>內部協作型 Agent Mesh 與操作中控</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM44</code></td><td>Extension Client Layer</td><td>Module</td><td>Execution</td><td>Chrome Extension 節點入口</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM45</code></td><td>Task Router Hub</td><td>Module</td><td>Execution</td><td>中央任務分派與資料整流</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM46</code></td><td>Agent Logging &amp; Audit Hub</td><td>Module</td><td>Execution</td><td>集中 log、audit、trace</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM47</code></td><td>Trust Mode / Secure Channel Layer</td><td>Module</td><td>Execution</td><td>一般/保護/管制模式與輕量安全</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM48</code></td><td>Prompt Governance Module</td><td>Module</td><td>Execution</td><td>Prompt 治理與權限</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM49</code></td><td>Knowledge Package Exchange Module</td><td>Module</td><td>Execution</td><td>zip + 密碼的模組／知識包交換</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM50</code></td><td>Task Routing Capability</td><td>Dish</td><td>Execution</td><td>任務跨節點流動能力</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM51</code></td><td>Human-in-the-loop Confirmation</td><td>Dish</td><td>Execution</td><td>AI 先做、人確認</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM52</code></td><td>ZIP Package Delivery</td><td>Dish</td><td>Execution</td><td>模組包／知識包／更新包交付</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM53</code></td><td>Lightweight Encryption / Encoding Mode</td><td>Dish</td><td>Execution</td><td>輕量加密與編碼模式</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM54</code></td><td>LAN Node Discovery / Registration</td><td>Dish</td><td>Execution</td><td>區網節點發現與註冊</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM55</code></td><td>AI Usage Traceability</td><td>Dish</td><td>Execution</td><td>AI 使用追蹤</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM56</code></td><td>Rule-based Action Decision</td><td>Dish</td><td>Execution</td><td>規則式任務決策</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM57</code></td><td>Cross-device Task Handoff</td><td>Dish</td><td>Execution</td><td>跨裝置任務交接</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM65</code></td><td>AI Auto Filing</td><td>Module</td><td>Execution</td><td>把 Search 與內容判讀延伸成 AI 自動歸檔能力。</td><td>對應從手動整理升級為 Search -&gt; AI 自動歸檔。</td><td>Working Draft</td></tr><tr><td><code>MM68</code></td><td>Knowledge Audio Export Engine</td><td>Module</td><td>Execution</td><td>把知識內容轉成可發布、可教學的 Audio Asset。</td><td>把原本偏 TTS 功能，提升為 Knowledge -&gt; Audio Asset 的輸出引擎。</td><td>Working Draft</td></tr><tr><td><code>MM69</code></td><td>HITL Markdown Memory System</td><td>System</td><td>Execution</td><td>把 Markdown 升級為 AI 協作的外部記憶與檢核工作表：程式負責穩定拆解，AI / SLM 負責輔助檢查，人類負責最後確認。</td><td>不是單純 Markdown 文件產生器，也不是完整資料庫或全自動 AI 決策系統。核心是人可讀、程式可拆、AI 可輔助檢核的外部記憶工作系統。適合 SOP、狀態表、檢核表、工作紀錄、AI 協作交接資料。</td><td>Candidate</td></tr></tbody></table></div></details><details class="series-detail"><summary>CC 系列｜Concept / Insight / Pattern / Principle <span>(26)</span></summary><p>概念、洞見、設計原則與模式類模型菜，負責承接教學與方法論。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>CC01</code></td><td>架構分離 × 體驗整合</td><td>Concept</td><td>Concept</td><td>系統分層設計，但使用體驗可整合</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC02</code></td><td>Calendar-first</td><td>Concept</td><td>Concept</td><td>任務最終落到時間管理</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC03</code></td><td>Generate → Refine</td><td>Pattern</td><td>Concept</td><td>不同模型分工生成與收斂</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC04</code></td><td>AI Operation Layer</td><td>Concept</td><td>Concept</td><td>AI 工具與企業系統之間的操作層</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC05</code></td><td>Local AI × Cloud AI × Human 三層架構</td><td>Concept</td><td>Concept</td><td>本地、雲端、顧問 / 人的分工</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC06</code></td><td>ModelBox 是索引層，不是加工層</td><td>Concept</td><td>Concept</td><td>ModelBox 偏索引與編目，不是重加工</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC07</code></td><td>先流程，後工具</td><td>Principle</td><td>Concept</td><td>流程先跑通，工具再升級</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC08</code></td><td>Task-first Interaction</td><td>Concept</td><td>Concept</td><td>任務為入口，不是聊天</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC09</code></td><td>Chat-assisted Design</td><td>Concept</td><td>Concept</td><td>Chat 是附屬，不是主體</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC10</code></td><td>Cloud-escalation Principle</td><td>Principle</td><td>Concept</td><td>先 local，再必要時升級雲端</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC11</code></td><td>AI Preprocessing Layer</td><td>Concept</td><td>Concept</td><td>AI 先把資料轉成可用素材</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC12</code></td><td>Index-first KM</td><td>Concept</td><td>Concept</td><td>先建索引，不做重推理</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC13</code></td><td>PiP Router Concept</td><td>Concept</td><td>Concept</td><td>PiP 是總機，不是工作區</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC14</code></td><td>PiP Router</td><td>Concept</td><td>Concept</td><td>最上層輕量總機 UI</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC15</code></td><td>Skill-first with External Options</td><td>Concept</td><td>Concept</td><td>先遵循既有 skill，再由 AI 提供外部可選方案。</td><td>代表 Primary 是你的方法，Alternative 是 AI 建議，不做覆蓋式替代。</td><td>Working Draft</td></tr><tr><td><code>CC16</code></td><td>Non-destructive AI Guidance</td><td>Concept</td><td>Concept</td><td>AI 提供建議時不覆蓋原決策，而是保留使用者主方法與替代方案。</td><td>對應多方案輸出原則，強調 non-destructive guidance。</td><td>Working Draft</td></tr><tr><td><code>CC17</code></td><td>Full-context Storage</td><td>Concept</td><td>Ground Truth</td><td>把完整脈絡保留在檔案系統與版本記錄中，作為後續判讀與追溯依據。</td><td>對應 FS Ground Truth 強化，強調 full-context storage、data lineage 與 audit evidence。</td><td>Working Draft</td></tr><tr><td><code>CC18</code></td><td>Ground Truth First</td><td>Concept</td><td>Ground Truth</td><td>先確認檔案系統與版本證據，再進行 AI 推論、摘要與決策。</td><td>強化 FS 不只是資料來源，而是 evidence / ground truth layer。</td><td>Working Draft</td></tr><tr><td><code>CC19</code></td><td>Task -&gt; Prompt Compiler</td><td>Concept</td><td>Concept</td><td>把 Prompt Workbench 重新理解為 Task 到 AI 行為的編譯器，而不是獨立核心系統。</td><td>用來修正 Prompt Workbench 的定位：應視為 Module。</td><td>Working Draft</td></tr><tr><td><code>CC20</code></td><td>FALO Consulting Center</td><td>Concept</td><td>Concept</td><td>把 FALO 從 AI 工具集合升級為 AI 模型菜諮詢中心的商業定位。</td><td>對外商業定位主軸，用來承接顧問、課程、展示與服務設計。</td><td>Working Draft</td></tr><tr><td><code>CC21</code></td><td>Expert Experience to AI Knowledge</td><td>Concept</td><td>Concept</td><td>專家經驗可以透過資料化、模型化、流程化與任務化，轉成系統能力。</td><td>由 AI 知識工程教材頁映射而來，維持原貌保存，不重寫教材內容。</td><td>Working Draft</td></tr><tr><td><code>CC22</code></td><td>Prompt to Skill</td><td>Concept</td><td>Concept</td><td>Prompt 解決單次溝通，Skill 解決可重複能力。</td><td>由 AI 知識工程教材頁映射而來，維持原貌保存，不重寫教材內容。</td><td>Working Draft</td></tr><tr><td><code>CC23</code></td><td>Workflow to MCP</td><td>Concept</td><td>Concept</td><td>Workflow 解決流程理解，MCP 解決工具連接與邊界治理。</td><td>由 AI 知識工程教材頁映射而來，維持原貌保存，不重寫教材內容。</td><td>Working Draft</td></tr><tr><td><code>CC24</code></td><td>AI Task OS as Teaching Bridge</td><td>Concept</td><td>Concept</td><td>AI Task OS 可作為初學者理解 Agent 工作方式的橋樑。</td><td>由 AI 知識工程教材頁映射而來，維持原貌保存，不重寫教材內容。</td><td>Working Draft</td></tr><tr><td><code>CC25</code></td><td>AI to Delivery Bridge</td><td>Concept</td><td>Concept</td><td>AI 不只回答問題，還要能橋接到真實交付流程與工作環境。</td><td>用來承接顧問與教材定位，讓初學者理解「對話式 AI -&gt; 可交付工作」之間還有一層橋接能力。</td><td>Working Draft</td></tr><tr><td><code>CC26</code></td><td>Local-first Collaboration with Delayed Cloud Sync</td><td>Concept</td><td>Concept</td><td>地端即時協作、雲端延遲保存，是一種可教學、可治理的系統邊界。</td><td>這不是技術細節而已，而是 FALO 在場景系統中可反覆重用的設計原則。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>MMM 系列｜Multimodal / Local AI Track <span>(7)</span></summary><p>多模態、影音、Local AI 與前沿能力線，偏應用能力與實驗軌。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>MMM0</code></td><td>本書學習資源頁（教材入口）</td><td>Entry</td><td>MultiModal</td><td>教材網址／資源入口</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM10</code></td><td>WebLLM Client-side AI</td><td>Capability</td><td>Local AI</td><td>本地 / 瀏覽器端 AI 能力模組</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>POC Verified</td></tr><tr><td><code>MMM11</code></td><td>Text Search Local AI</td><td>Application</td><td>Local AI</td><td>本地 AI × 文字搜尋導覽</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>POC Verified</td></tr><tr><td><code>MMM5</code></td><td>轉場觸發機制</td><td>Capability</td><td>MultiModal</td><td>影片節奏與轉場邏輯控制</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM7</code></td><td>文字轉語音（TTS）</td><td>Capability</td><td>MultiModal</td><td>Canva 內建 TTS 等語音輸出</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM8</code></td><td>影片自動上字幕</td><td>Capability</td><td>MultiModal</td><td>影音內容理解與字幕生成</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM9</code></td><td>多螢幕與多來源錄製</td><td>Capability</td><td>MultiModal</td><td>攝影機＋螢幕＋音訊整合</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>PM 系列｜AI Task OS / Platform Mainline <span>(7)</span></summary><p>FALO 作為 AI Task OS 的主軸系列，承接任務系統、決策與交付橋接。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>PM01</code></td><td>AI Task OS</td><td>System</td><td>Task OS</td><td>以任務狀態為核心，統一追蹤 Goal、State、Decision 與 Next Step 的 AI 任務作業系統。</td><td>本次升級主軸之一，代表 FALO 從模型菜集合收斂到 AI 任務作業系統。 本版補入 AI 知識工程教材頁，作為 PM01 的教學素材來源。</td><td>Working Draft</td></tr><tr><td><code>PM02</code></td><td>Prompt / Skill / MCP / Agent Evolution</td><td>Module</td><td>Task OS</td><td>將 Prompt -&gt; Skill、Workflow -&gt; MCP、Assistant -&gt; Agent 的能力演進整理為教學素材。</td><td>由 index.html 映射而來，用來幫初學者理解能力演進與邊界治理。</td><td>Model Dish Candidate</td></tr><tr><td><code>PM07</code></td><td>Layered NotebookLM System</td><td>System</td><td>Task OS</td><td>把 Source Notebook 與 Rule Notebook 分層，將資料理解與決策邏輯拆開管理。</td><td>Source Notebook 負責 PDF、OCR、文件摘要與比對；Rule Notebook 負責 decision、pattern、模型菜與顧問邏輯。</td><td>Working Draft</td></tr><tr><td><code>PM08</code></td><td>HITL Rapid Interface Generator</td><td>Module</td><td>Task OS</td><td>讓 AI 依任務快速生成可操作的 HITL 介面，支援 vibe coding 式的人機協作。</td><td>本次將 HITL 從人工介入升級為 AI 可生成的人機協作 UI。</td><td>Working Draft</td></tr><tr><td><code>PM09</code></td><td>AI Interaction Platform</td><td>System</td><td>Task OS</td><td>作為統一對話入口與操作平台，串接所有系統、規則與工作流。</td><td>承接原本 Task OS / Workbench 的入口角色，現在更明確定位為 AI Interaction Platform。</td><td>Working Draft</td></tr><tr><td><code>PM10</code></td><td>Skill-first Decision Engine</td><td>Module</td><td>Task OS</td><td>依照 Skill -&gt; Rule -&gt; Source -&gt; FS 的優先順序進行決策，並保留 Primary 與 Alternative 兩種輸出。</td><td>核心原則是不覆蓋使用者方法，而是先尊重 skill，再提供外部選項。</td><td>Working Draft</td></tr><tr><td><code>PM11</code></td><td>AI Delivery Bridge</td><td>Module</td><td>Task OS</td><td>讓 FALO 能透過 MCP、SSH 與 GitHub push，把對話式 AI 任務橋接到真實工作環境與交付流程。</td><td>面向顧問服務、教材模組與可組件化能力。適用於 ChatGPT Codex、Claude Cowork 等對話式 AI 執行環境，但不綁定單一平台。</td><td>Model Dish Candidate</td></tr></tbody></table></div></details><details class="series-detail"><summary>FS 系列｜Ground Truth / Evidence Layer <span>(0)</span></summary><p>Ground Truth 與 Evidence Layer 的保留區，目前欄位已預留，但本版尚未展開具名條目。</p><p>目前此系列在 v0.11 沒有具名條目，先保留為分類與欄位預留區。</p></details><details class="series-detail"><summary>TEACH 系列｜Teaching Materials <span>(3)</span></summary><p>從教材、案例、教學頁映射出的模型菜，負責把概念轉成可教內容。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>TEACH01</code></td><td>AI Knowledge Engineering Intro</td><td>System</td><td>Teaching</td><td>把專家經驗轉成 AI 知識工程的入門教材。</td><td>主軸是把專家經驗、工作流、Prompt / Skill / MCP / Agent 轉成 AI 可學習、可教學、可運用的知識工程。</td><td>Model Dish Candidate</td></tr><tr><td><code>TEACH02</code></td><td>Workflow Decomposition Teaching Case</td><td>Module</td><td>Teaching</td><td>以空氣鼓棒、設備維修、客服、作文診斷、餐廳出餐等案例，教 AI 如何拆解與優化工作流。</td><td>對應 index.html 中的主案例與遷移案例，強調從專家經驗中拆出流程。</td><td>Model Dish Candidate</td></tr><tr><td><code>TEACH03</code></td><td>Resource-bounded AI Task Application</td><td>Module</td><td>Teaching</td><td>說明 AI 如何在既有資料、規則、案例與工具內完成任務。</td><td>對應資源限定任務應用與工具邊界的教學說明。</td><td>Model Dish Candidate</td></tr></tbody></table></div></details><details class="series-detail"><summary>ASSET 系列｜Visual Assets <span>(2)</span></summary><p>展示型、視覺型、語意導航型模型菜資產，偏 showcase、教學入口與外部說明價值。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>ASSET01</code></td><td>Sampuru AI Solution Map</td><td>Visual Asset / Model Dish</td><td>Visual Navigation / Showcase / Semantic Map</td><td>Sampuru AI Solution Map 是一張可互動的 AI Solution 語意地圖，用四個圖像區域呈現 FALO 模型菜與 Visual Asset 的展示型態。</td><td>這不是資料庫系統，也不是一般網站分類頁。它是 Step 3 的影像式分類地圖 MVP，用來讓使用者透過地圖理解 FALO AI 解決方案分布。</td><td>POC complete / MVP usable</td></tr><tr><td><code>ASSET02</code></td><td>Local-first IM Workbench Visual Explainer Set</td><td>Visual Asset Set / Model Dish</td><td>Visual Storytelling / Teaching / System Explainer</td><td>以四張單頁圖解，分別從簡單版、情境版、情境精華版與最複雜版，展示 Local-first IM Workbench 的不同敘事深度與系統切面。</td><td>這四張是一套，不應拆成四個零散條目。適合用於教學、顧問提案、系統說明與視覺導覽；同時作為 IM01 的外部展示資產。</td><td>POC complete / Teaching-ready</td></tr></tbody></table></div></details><details class="series-detail"><summary>TRACE 系列｜AI Learning Trace <span>(0)</span></summary><p>AI 學習履歷與 GitHub / Pages 資產治理保留區，本版欄位已規劃，後續再補實體條目。</p><p>目前此系列在 v0.11 沒有具名條目，先保留為分類與欄位預留區。</p></details><details class="series-detail"><summary>NewsOps 系列｜Project Model Dishes <span>(18)</span></summary><p>專案型系統族群，涵蓋 ETL、監測、編修、輸出與審核的整條運作鏈。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>NO01</code></td><td>Information Collection Center</td><td>System</td><td>NewsOps</td><td>資訊入口的統一中控</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO02</code></td><td>NewsOps System</td><td>System</td><td>NewsOps</td><td>ETL + Scheduler + Monitor 聯合作戰系統</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO03</code></td><td>Crawler Center</td><td>Module</td><td>NewsOps</td><td>Extract / Transform / Load 與卡帶式來源</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO04</code></td><td>Scheduler Center</td><td>Module</td><td>NewsOps</td><td>cron 到 heartbeat / orchestration</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO05</code></td><td>Monitor Center</td><td>Module</td><td>NewsOps</td><td>log、狀態監測、事件追蹤</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO06</code></td><td>Crawler Result Center（CRC）</td><td>Module</td><td>NewsOps</td><td>結果管理、編修、匯出、queue / proposal / rollback</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO07</code></td><td>Intake Layer</td><td>Module</td><td>NewsOps</td><td>Event-driven intake / localhost / UI / extension 接口</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO08</code></td><td>Translation Layer</td><td>Dish</td><td>NewsOps</td><td>翻譯</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO09</code></td><td>Summarization Layer</td><td>Dish</td><td>NewsOps</td><td>摘要</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO10</code></td><td>Rewrite Layer</td><td>Dish</td><td>NewsOps</td><td>改稿</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO11</code></td><td>Proposal / Rollback Layer</td><td>Dish</td><td>NewsOps</td><td>提案 / 回退</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO12</code></td><td>Duplicate Detection Layer</td><td>Dish</td><td>NewsOps</td><td>重複檢測</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO13</code></td><td>Queue / Processing View Layer</td><td>Dish</td><td>NewsOps</td><td>排程與處理視圖</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO14</code></td><td>Export Layer</td><td>Dish</td><td>NewsOps</td><td>CSV / Excel / JSON 匯出</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO15</code></td><td>Delivery Layer</td><td>Dish</td><td>NewsOps</td><td>email / 通知交付</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO16</code></td><td>Orchestration Layer</td><td>Dish</td><td>NewsOps</td><td>未來 orchestration</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO17</code></td><td>Heartbeat Layer</td><td>Dish</td><td>NewsOps</td><td>未來 heartbeat</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO18</code></td><td>Action Log / Audit Layer</td><td>Dish</td><td>NewsOps</td><td>操作與審核層</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>IM 系列｜Local-first Collaboration Systems <span>(9)</span></summary><p>Local-first IM 與協作工作台系統，承接 communication OS、prompt 管理與資料閉環。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>IM01</code></td><td>Local-first IM Workbench</td><td>System</td><td>Collaboration System</td><td>把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。</td><td>建議名稱可理解為 Local-first IM Workbench，也可視為 AI Client Communication Workbench。它介於 System / Module 之間，但目前以系統級模型菜原型收錄。Dev 版 index.html 偏實作介面；external-overview.html 偏外部說明版。 另有一組四張單頁視覺圖解，已收錄為 ASSET02，作為 IM01 的外部展示資產。</td><td>MVP usable</td></tr><tr><td><code>IM02</code></td><td>Local-first IM Dev Client</td><td>Module</td><td>Collaboration System</td><td>Local-first IM Dev 實作介面版，用來測試多人、多 client、AI 角色、Prompt 管理、資料閉環與延遲同步。</td><td>這份 index.html 是 Dev 實作介面版，偏操作與測試；external-overview.html 則是對外說明版，偏非工程讀者。</td><td>MVP usable</td></tr><tr><td><code>IM03</code></td><td>Local IM Server</td><td>Module</td><td>Collaboration System</td><td>作為地端中樞，負責接收 client 連線、管理在線狀態、轉送訊息並立即寫入本地紀錄。</td><td>公開版只保留架構角色與能力摘要，不暴露不必要的環境細節。</td><td>MVP usable</td></tr><tr><td><code>IM04</code></td><td>Identity Module</td><td>Module</td><td>Collaboration System</td><td>把 user_id、client_id 與 session trace 分開管理，讓身份、登入入口與稽核線索可以被清楚教學與追蹤。</td><td>第一版重點是教學與稽核，不是複雜權限系統。</td><td>MVP usable</td></tr><tr><td><code>IM05</code></td><td>Message Router</td><td>Module</td><td>Collaboration System</td><td>判斷訊息是 room message 還是 direct message，並把它送到對應的 client 或 room 成員。</td><td>適合拿來教初學者理解最小可行的訊息轉送邏輯。</td><td>MVP usable</td></tr><tr><td><code>IM06</code></td><td>Local Message Log</td><td>Module</td><td>Collaboration System</td><td>把本地訊息紀錄作為第一真實來源，支援後續查詢、匯出與未來批量同步。</td><td>公開版保留資料角色說明，不暴露 runtime data 本身。</td><td>MVP usable</td></tr><tr><td><code>IM07</code></td><td>Admin View / Admin API</td><td>Module</td><td>Collaboration System</td><td>提供開發測試 / 稽核視角，讓使用者能查看在線狀態、全域紀錄、連線資訊、IP / session / room 狀態與備份資訊。</td><td>目前偏全員管理員視角，方便展示、測試與稽核；與 Communication OS、AI Logging Shell、Local Data Hub 有高度關聯。</td><td>MVP usable</td></tr><tr><td><code>IM08</code></td><td>Personal Prompt Manager</td><td>Module</td><td>Collaboration System</td><td>把 Prompt 新增、分類、搜尋、匯入匯出與帶入聊天室整合在個人 Prompt 管理器中。</td><td>這一模組讓 IM 不只是聊天，而是可承接 AI 指令、Prompt 治理與教學資產。</td><td>MVP usable</td></tr><tr><td><code>IM09</code></td><td>Backup Sync Queue</td><td>Module</td><td>Collaboration System</td><td>把 JSON / Excel 匯出匯入、本機回灌、GAS Lite 部署包與 Google Sheet 延遲同步整理成資料閉環隊列。</td><td>核心邊界是 Local-first、Cloud delayed save；同時支援資料閉環與 GAS / Google Sheet 備份路線。</td><td>MVP usable</td></tr></tbody></table></div></details></div>
-        </section>
-        <section class="panel tab-content panel-privacy">
-          <h2>公開可讀的詳細版</h2>
-          <div class="grid" style="margin-top:16px;">
-            <article class="card">
-              <strong>保留的東西</strong>
-              <p>模型菜命名、系列分類、升版脈絡、教學 / 顧問 / 展示密度、各模型菜的分類細節，以及與原版對齊的閱讀結構。</p>
-            </article>
-            <article class="card">
-              <strong>收掉的東西</strong>
-              <p>本機絕對路徑、過細的私有執行痕跡、不必要的環境識別資訊，以及不適合直接公開的敏感細節。</p>
-            </article>
-            <article class="card">
-              <strong>不是去版權版</strong>
-              <p>這版不把原版內容洗掉，而是保留原版精神與脈絡，只做公開前的精度調整與隱私整理。</p>
-            </article>
-            <article class="card">
-              <strong>GitHub-ready</strong>
-              <p>公開頁面改用 repo 相對來源與公開敘事，保留完整模型菜細節，但避免把私有環境資訊直接搬上 GitHub。</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="panel tab-content panel-evidence">
-          <h2>證據與來源</h2>
-          <ul class="list" style="margin-top:12px;">
-            <li><code>docs/mvp/local-first-im-browser-mvp.md</code></li>
-            <li><code>apps/local-first-im/README.md</code></li>
-            <li><code>apps/local-first-im/VERSION.md</code></li>
-            <li><code>apps/local-first-im/static/index.html</code></li>
-            <li><code>apps/local-first-im/docs/external-overview.html</code></li>
-            <li><code>apps/local-first-im/server.py</code></li>
-            <li><code>apps/local-first-im/run_local_im.command</code></li>
-            <li><code>docs/catalog/falo-model-dish-registry-v0.10.md</code></li>
-            <li><code>docs/catalog/falo-model-dish-registry-v0.10.html</code></li>
-            <li><code>docs/catalog/FALO_Model_Dish_Registry_v0.10.xlsx</code></li>
-          </ul>
-          <div class="note">公開版只保留 repo 相對路徑與必要證據脈絡，不直接公開本機絕對路徑與不必要的私有環境資訊。</div>
-        </section>
-
-        <section class="panel tab-content panel-affected">
-          <h2>受影響條目</h2>
-          <div class="grid" style="margin-top:16px;">
-            <article class="card"><strong>PM11 · AI Delivery Bridge</strong><p>Model Dish Candidate</p><p>以 MCP、SSH 與 GitHub push 為橋接能力，把 AI 任務帶到真實交付流程。</p></article>
-            <article class="card"><strong>IM01 · Local-first IM System</strong><p>MVP usable</p><p>地端即時、雲端延遲保存的 Browser IM 主系統。</p></article>
-            <article class="card"><strong>IM02-IM09</strong><p>MVP usable</p><p>從 Browser Client、Local Server、Identity、Router、Log、Admin、Prompt 到 Backup 的完整子元件群。</p></article>
-            <article class="card"><strong>CC25 · AI to Delivery Bridge</strong><p>Working Draft</p><p>AI 不只回答，還要能橋接到真實交付流程與工作環境。</p></article>
-            <article class="card"><strong>CC26 · Local-first Collaboration with Delayed Cloud Sync</strong><p>Working Draft</p><p>地端即時協作、雲端延遲保存，是一種可教學、可治理的系統邊界。</p></article>
-          </div>
-        </section>
+        <section class="panel tab-content panel-overview"><h2>版本定位</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>這不是重寫版</strong><p>v0.11 高度參考原版內容與結構，保留 FALO Registry 的原始敘事與教學密度。</p></article><article class="card"><strong>這是公開可讀的詳細版</strong><p>主要收斂的是私有路徑、過細執行痕跡與不必要的環境識別資訊，同時保留完整分類與明細。</p></article><article class="card"><strong>不是薄摘要</strong><p>公開版與個人版都要詳細放進模型菜分類與細節；公開版只降低精度，不降低內容厚度。</p></article><article class="card"><strong>新增治理主軸</strong><p>這次補入 Human-centered AI OS、AI Runtime Governance、AI Resource Governance、AI Execution Ticket 與 HITL Execution Workflow。</p></article></div><div class="note">公開版的原則不是把模型菜寫薄，而是維持完整分類、能力拆解、關聯與用途，再把敏感精度降一階。</div></section>
+        <section class="panel tab-content panel-upgrade"><h2>v0.11 升版重點</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>新增治理主線</strong><p>新增 <code>PM12</code> 至 <code>PM16</code>，把 Human-centered AI OS、AI Runtime、AI Resource Governance、AI Execution Ticket 與 HITL Workflow 收成一條主線。</p></article><article class="card"><strong>補概念條目</strong><p>新增 <code>CC27</code> 至 <code>CC31</code>，把 Workflow Navigator、Governance as Workflow、Runtime / Authority Separation 等概念明確收錄。</p></article><article class="card"><strong>延續 PM11</strong><p><code>PM11</code> 仍負責讓 AI 透過 MCP、SSH 與 GitHub push 走向真實交付流程。</p></article><article class="card"><strong>延續 IM 系列</strong><p><code>IM</code> 系列仍是 PM / IM / Workflow Layer 的主要場景系統，用來承接公告、討論、任務與 <code>execution_request</code>。</p></article><article class="card"><strong>治理邊界</strong><p>Runtime 負責執行與路由，Authority 負責 key issue、approval、quota、revoke 與 policy，不讓 AI 自己兼任所有權力。</p></article></div></section>
+        <section class="panel tab-content panel-history"><h2>已知升版歷程</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>v0.01</strong><p>建立 Catalog Layer 基礎版本，整理 MM、BB、NewsOps 三大來源，並用 System / Module / Dish 做第一輪清單化。</p></article><article class="card"><strong>v0.07</strong><p>把母表正式化成 Excel / Markdown / HTML，統一 AA、BB、MM、CC、MMM、NewsOps 的 registry 欄位與展示格式。</p></article><article class="card"><strong>v0.08</strong><p>將 FALO 從模型菜集合升級成 AI Task OS 導向，加入雙 NotebookLM、Skill-first、Primary / Alternative、PM / FS 主軸。</p></article><article class="card"><strong>v0.09b</strong><p>將教材頁納入 patch，新增 TEACH 系列與 PM / CC 的教學映射。</p></article><article class="card"><strong>v0.09c</strong><p>新增 ASSET 系列，將 Sampuru AI Solution Map 登錄為 Visual Asset / AI Solution Map 型模型菜。</p></article><article class="card"><strong>v0.10</strong><p>以 <code>v0.09c</code> 為基底整理發佈版，建立備份與對外交付版本，並持續收納新候選條目。</p></article><article class="card"><strong>v0.11</strong><p>推出高度參考原版的 GitHub-ready 公開可讀詳細版，新增 <code>PM11</code>、<code>IM</code> 系列，並補入 Human-centered AI OS / AI Runtime / HITL 治理主軸。</p></article></div></section>
+        <section class="panel tab-content panel-governance"><h2>FALO 核心治理主軸｜Human-centered AI OS</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>不是這樣</strong><p>FALO 不追求完全自治、無限制權限的 Autonomous AI Agent，也不鼓勵 Runtime 長期持有高權限 key。</p></article><article class="card"><strong>更像這樣</strong><p>FALO 的 AI OS 更像智慧副駕、Workflow 導航器、AI 組合器與 Runtime 協調器。</p></article><article class="card"><strong>AI 的角色</strong><p>提供方向、組合模型菜、建議 workflow、協助理解情境、提供下一步與候選方案、路由 AI / Tool / Prompt。</p></article><article class="card"><strong>Human 保留什麼</strong><p>最終決策、高權限執行控制、核准與 revoke，仍由人類保留。</p></article></div><div class="grid" style="margin-top:16px;"><article class="card"><strong>A. PM / IM / Workflow Layer</strong><p>負責公告、討論、任務、<code>execution_request</code>、協作與 Prompt，但不直接執行 AI 高權限操作。</p></article><article class="card"><strong>B. AI Runtime Layer</strong><p>負責 AI model routing、AI execution、workflow execution、audit log 與 <code>ai_resource_event</code>。</p></article><article class="card"><strong>C. Governance / Authority Layer</strong><p>負責 key issue、scope control、approval、revoke、quota 與 policy，而且這層不應由 Runtime AI 自己控制。</p></article></div><div class="note">這條主線對應的核心資料語法是 <code>user_id + ai_resource_key + scope</code>。高權限任務應採 <code>request -> approval -> temporary execution key -> execute -> expire / revoke</code> 的 execution ticket 模式。</div><div class="table-wrap" style="margin-top:16px;"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>一句話用途</th></tr></thead><tbody><tr><td><code>PM12</code></td><td>Human-centered AI OS</td><td>System</td><td>把 AI 定位成智慧副駕、Workflow 導航器與治理內的執行協調者，而不是擁有無限制權限的自治 Agent。</td></tr><tr><td><code>PM13</code></td><td>AI Runtime Governance</td><td>Module</td><td>把 AI model routing、AI execution、workflow execution、audit log 與 AI resource event 納入可治理的 Runtime Layer。</td></tr><tr><td><code>PM14</code></td><td>AI Resource Governance</td><td>Module</td><td>用 <code>user_id + ai_resource_key + scope</code> 管理 AI 資源使用邊界，並支援 approval_required、quota、revoke。</td></tr><tr><td><code>PM15</code></td><td>AI Execution Ticket</td><td>Module</td><td>用 temporary execution key / execution ticket 控制高權限任務，避免 Runtime 長期持有敏感權限。</td></tr><tr><td><code>PM16</code></td><td>HITL Execution Workflow</td><td>Module</td><td>把 AI 建議、Human approve、workflow execute 與 log record 串成可稽核的人控式執行流程。</td></tr></tbody></table></div><div class="note">這樣的設計也更貼近 ISO 42001 / 27001 常談的 Human Oversight、Least Privilege、Auditability、Traceability 與 Separation of Duties。</div></section>
+        <section class="panel tab-content panel-pm11"><h2>PM11｜AI Delivery Bridge</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>一句話定位</strong><p>讓 FALO 能透過 <code>MCP</code>、<code>SSH</code> 與 <code>GitHub push</code>，把對話式 AI 任務橋接到真實工作環境與交付流程。</p></article><article class="card"><strong>適用環境</strong><p><code>ChatGPT Codex</code>、<code>Claude Cowork</code>，以及後續可擴充的對話式 AI 執行環境。</p></article><article class="card"><strong>服務定位</strong><p>這條模型菜可以同時對應顧問服務、教材模組與可組件化的橋接能力。</p></article><article class="card"><strong>重要邊界</strong><p>重點不是工具綁定，而是 AI 如何從對話走到交付。</p></article></div><div class="note">FALO 在這裡扮演的是橋接層：幫使用者把任務、規則、工具存取與交付動作連起來，而不是只停在對話或提示詞。</div></section>
+        <section class="panel tab-content panel-im-system"><h2>IM01｜Local-first IM Workbench</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>主系統定位</strong><p>把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。</p></article><article class="card"><strong>和治理主線的關係</strong><p>這條線適合承接公告、討論、任務、<code>execution_request</code>、協作與 Prompt，但不應直接消費高權限 AI key。</p></article><article class="card"><strong>顧問價值</strong><p>這不是單一聊天室功能，而是一個可拆元件、可治理、可延後上雲的場景型系統。</p></article><article class="card"><strong>核心邊界</strong><p><code>Local-first IM: 地端即時，雲端延遲保存。</code></p></article></div><div class="grid" style="margin-top:16px;"><article class="card"><strong>Dev 版</strong><p><code>static/index.html</code> 是 Local-first IM Dev 實作介面版，偏操作、測試、稽核與多人 / 多 client 驗證。</p></article><article class="card"><strong>Overview 版</strong><p><code>docs/external-overview.html</code> 是外部說明版，偏非工程讀者、教學展示與系統定位說明。</p></article><article class="card"><strong>關聯主題</strong><p>Communication OS、Prompt Manager、Local Data Hub、GAS Sync、AI Logging Shell、HITL。</p></article></div></section>
+        <section class="panel tab-content panel-im-modules"><h2>IM 系列子元件</h2><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>一句話用途</th></tr></thead><tbody><tr><td><code>IM02</code></td><td>Local-first IM Dev Client</td><td>Module</td><td>Local-first IM Dev 實作介面版，用來測試多人、多 client、AI 角色、Prompt 管理、資料閉環與延遲同步。</td></tr><tr><td><code>IM03</code></td><td>Local IM Server</td><td>Module</td><td>作為地端中樞，負責接收 client 連線、管理在線狀態、轉送訊息並立即寫入本地紀錄。</td></tr><tr><td><code>IM04</code></td><td>Identity Module</td><td>Module</td><td>把 <code>user_id</code>、<code>client_id</code> 與 session trace 分開管理，讓身份、登入入口與稽核線索可以被清楚教學與追蹤。</td></tr><tr><td><code>IM05</code></td><td>Message Router</td><td>Module</td><td>判斷訊息是 room message 還是 direct message，並把它送到對應的 client 或 room 成員。</td></tr><tr><td><code>IM06</code></td><td>Local Message Log</td><td>Module</td><td>把本地訊息紀錄作為第一真實來源，支援後續查詢、匯出與未來批量同步。</td></tr><tr><td><code>IM07</code></td><td>Admin View / Admin API</td><td>Module</td><td>提供開發測試 / 稽核視角，讓使用者能查看在線狀態、全域紀錄、連線資訊、IP / session / room 狀態與備份資訊。</td></tr><tr><td><code>IM08</code></td><td>Personal Prompt Manager</td><td>Module</td><td>把 Prompt 新增、分類、搜尋、匯入匯出與帶入聊天室整合在個人 Prompt 管理器中。</td></tr><tr><td><code>IM09</code></td><td>Backup Sync Queue</td><td>Module</td><td>把 JSON / Excel 匯出匯入、本機回灌、GAS Lite 部署包與 Google Sheet 延遲同步整理成資料閉環隊列。</td></tr></tbody></table></div><div class="note">這條 Workbench 的核心能力可概括為六組：IM / Room / Direct Message、通訊錄與備註、Prompt 管理器、資料閉環、GAS Lite / Google Sheet 備份，以及開發測試 / 稽核視角。</div></section>
+        <section class="panel tab-content panel-full-registry"><h2>完整分類與明細列表</h2><p style="margin-top:12px; color:var(--muted);">這一頁不是只有升版摘要，而是把目前 <code>v0.11</code> 已知模型菜盤面按系列完整展開。公開版也盡量保留分類、模組、能力、用途與註記；差別只在精度，不在內容厚度。</p><div class="grid" style="margin-top:16px;"><article class="card"><strong>AA</strong><p>12 entries</p><p>作為模型菜總目錄的頂層樓層分類，幫助讀者先看懂盤面，再進入具體模型菜。</p></article><article class="card"><strong>BB</strong><p>13 entries</p><p>偏顧問與教學展示的實戰模型菜，可直接對應方案、課程與導入情境。</p></article><article class="card"><strong>MM</strong><p>60 entries</p><p>目前已成形、已命名、可教學、可產品化的既有核心模型菜資產。</p></article><article class="card"><strong>CC</strong><p>31 entries</p><p>概念、洞見、設計原則與模式類模型菜，負責承接教學與方法論。</p></article><article class="card"><strong>MMM</strong><p>7 entries</p><p>多模態、影音、Local AI 與前沿能力線，偏應用能力與實驗軌。</p></article><article class="card"><strong>PM</strong><p>12 entries</p><p>FALO 作為 AI Task OS 的主軸系列，承接任務系統、決策、治理與交付橋接。</p></article><article class="card"><strong>FS</strong><p>0 entries</p><p>Ground Truth 與 Evidence Layer 的保留區，目前欄位已預留，但本版尚未展開具名條目。</p></article><article class="card"><strong>TEACH</strong><p>3 entries</p><p>從教材、案例、教學頁映射出的模型菜，負責把概念轉成可教內容。</p></article><article class="card"><strong>ASSET</strong><p>2 entries</p><p>展示型、視覺型、語意導航型模型菜資產，偏 showcase、教學入口與外部說明價值。</p></article><article class="card"><strong>TRACE</strong><p>0 entries</p><p>AI 學習履歷與 GitHub / Pages 資產治理保留區，本版欄位已規劃，後續再補實體條目。</p></article><article class="card"><strong>NewsOps</strong><p>18 entries</p><p>專案型系統族群，涵蓋 ETL、監測、編修、輸出與審核的整條運作鏈。</p></article><article class="card"><strong>IM</strong><p>9 entries</p><p>Local-first IM 與協作工作台系統，承接 communication OS、prompt 管理、資料閉環與治理執行邊界。</p></article></div><div class="series-list"><details class="series-detail"><summary>AA 系列｜Catalog Floors / Department Categories <span>(12)</span></summary><p>作為模型菜總目錄的頂層樓層分類，幫助讀者先看懂盤面，再進入具體模型菜。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>AA01</code></td><td>知識收集與整理</td><td>Category</td><td>Catalog</td><td>收集資料、筆記、來源、附件與初步整理</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA02</code></td><td>知識庫與檢索</td><td>Category</td><td>Catalog</td><td>知識庫、FAQ、RAG、文件查找與檢索</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA03</code></td><td>Prompt 與 AI 操作輔助</td><td>Category</td><td>Catalog</td><td>Prompt、AI 操作殼、指令與互動入口</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA04</code></td><td>文件生成與寫作</td><td>Category</td><td>Catalog</td><td>企畫書、報告、SOP、改稿與輸出</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA05</code></td><td>教學訓練與新人帶領</td><td>Category</td><td>Catalog</td><td>onboarding、教材、主管帶員</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA06</code></td><td>專案管理與協作</td><td>Category</td><td>Catalog</td><td>任務、專案、協作、排程</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA07</code></td><td>行政營運效率</td><td>Category</td><td>Catalog</td><td>日常效率、行政回覆、整理</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA08</code></td><td>業務行銷與對外溝通</td><td>Category</td><td>Catalog</td><td>對外提案、簡報、行銷文案</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA09</code></td><td>治理、稽核與紀錄</td><td>Category</td><td>Catalog</td><td>治理、稽核、留痕、權限與追蹤</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA10</code></td><td>資料保護與去識別化</td><td>Category</td><td>Catalog</td><td>加解密、去識別化、交換保護</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA11</code></td><td>AI Agent / 自動化工作流</td><td>Category</td><td>Catalog</td><td>Agent、工作流、自動化與 orchestration</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr><tr><td><code>AA12</code></td><td>個人工作台與一人公司</td><td>Category</td><td>Catalog</td><td>個人知識助手、顧問工作台、一人公司</td><td>頂層 catalog 分類，用來整理盤面，不直接代表單一實作系統。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>BB 系列｜Consulting / Teaching Use Cases <span>(13)</span></summary><p>偏顧問與教學展示的實戰模型菜，可直接對應方案、課程與導入情境。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>BB01</code></td><td>公司知識庫建立（KM）</td><td>System</td><td>Execution</td><td>企業知識庫建立與累積</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB02</code></td><td>投標企畫加速（ETL）</td><td>System</td><td>Execution</td><td>投標文件與提案內容加速生成</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB03</code></td><td>新人快速上手（Onboarding）</td><td>System</td><td>Execution</td><td>新進人員學習與上手系統</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB04</code></td><td>主管帶員減壓（管理）</td><td>System</td><td>Execution</td><td>減輕主管反覆帶員負擔</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB05</code></td><td>員工效率提升（日常）</td><td>System</td><td>Execution</td><td>用 AI 提升日常工作效率</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB06</code></td><td>專案問題解決（AI 陪跑）</td><td>System</td><td>Execution</td><td>專案問題拆解與 AI 陪跑</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB07</code></td><td>結案報告生成（ETL）</td><td>System</td><td>Execution</td><td>專案結案報告生成</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB08</code></td><td>Source Inbox（資料收件匣）</td><td>Module</td><td>Execution</td><td>外部資料與輸入內容收件匣</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB09</code></td><td>Prompt Manager</td><td>Module</td><td>Execution</td><td>教學與顧問場景的 Prompt 資產管理</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB10</code></td><td>KM Lite</td><td>Module</td><td>Execution</td><td>輕量知識管理能力</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB11</code></td><td>Logging Shell</td><td>Module</td><td>Execution</td><td>操作流程記錄與追蹤</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB12</code></td><td>輸出引擎</td><td>Module</td><td>Execution</td><td>輸出文件、報告與交付成果</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr><tr><td><code>BB13</code></td><td>Cloud Calendar PM</td><td>System</td><td>Execution</td><td>以 Google Calendar 為核心的輕量雲 PM 中樞</td><td>偏教學與顧問展示，適合直接轉成方案、課程與對外說明。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>MM 系列｜Core Named Model Dishes <span>(60)</span></summary><p>目前已成形、已命名、可教學、可產品化的既有核心模型菜資產。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>MM01</code></td><td>新聞探索與知識流動系統</td><td>System</td><td>Execution</td><td>整理新聞蒐集、理解與知識流動的完整系統</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM02</code></td><td>AI 操作殼（Logging Shell）</td><td>Module</td><td>Execution</td><td>AI 操作過程的記錄、追蹤與操作介面</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM03</code></td><td>Local Data Hub</td><td>Module</td><td>Execution</td><td>本地資料管理中心／資料底盤</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM04</code></td><td>Google AI Search Logging</td><td>Dish</td><td>Execution</td><td>記錄 Google AI Search 查詢與結果</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM05</code></td><td>雲指令小幫手（Cloud Prompt Assistant）</td><td>Dish</td><td>Execution</td><td>快速調用與管理雲端提示詞或指令</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM06</code></td><td>Prompt 管理器（Prompt Asset Manager）</td><td>Module</td><td>Execution</td><td>Prompt 資產整理、重用與教學化</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。 本版補充：若延伸為 Prompt Workbench，定位應視為 Module，負責 Task → Prompt 的編譯，而非核心系統。</td><td>Working Draft</td></tr><tr><td><code>MM07</code></td><td>Source Inbox</td><td>Module</td><td>Execution</td><td>外部來源資料入口</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM08</code></td><td>Smart KM Core</td><td>System</td><td>Execution</td><td>知識管理核心系統</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM09</code></td><td>Local RAG Lite</td><td>Module</td><td>Execution</td><td>輕量版本地 RAG 能力</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM10</code></td><td>Trusted Session Governance</td><td>Module</td><td>Execution</td><td>AI session 的可信邊界與使用規則</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM11</code></td><td>Query Governance</td><td>Dish</td><td>Execution</td><td>查詢行為與檢索規範管理</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM12</code></td><td>AI 對話紀錄與治理系統</td><td>System</td><td>Execution</td><td>對話內容記錄、追蹤、稽核與教學</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM13</code></td><td>Sidebar Logging Shell</td><td>Module</td><td>Execution</td><td>側邊欄形式的操作殼</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM14</code></td><td>去識別化 / 加解密系統</td><td>System</td><td>Execution</td><td>資料去識別化與加解密保護</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM15</code></td><td>AI Usage Governance</td><td>System</td><td>Execution</td><td>AI 使用方式、風險與治理規則</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM16</code></td><td>Information Collection Center</td><td>System</td><td>Execution</td><td>資訊搜集中樞</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM17</code></td><td>NewsOps System</td><td>System</td><td>Execution</td><td>新聞 ETL + Scheduler + Monitor 聯合作戰系統</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM18</code></td><td>Crawler Center</td><td>Module</td><td>Execution</td><td>抓取外部新聞或資訊來源</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM19</code></td><td>Scheduler Center</td><td>Module</td><td>Execution</td><td>排程與任務執行時機管理</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM20</code></td><td>Monitor Center</td><td>Module</td><td>Execution</td><td>監控系統狀態、流程與異常</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM21</code></td><td>Crawler Result Center（CRC）</td><td>Module</td><td>Execution</td><td>集中管理爬取結果</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM22</code></td><td>Intake Layer</td><td>Module</td><td>Execution</td><td>原始輸入資料的接收與分流</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM23</code></td><td>Translation Layer</td><td>Dish</td><td>Execution</td><td>翻譯內容</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM24</code></td><td>Summarization Layer</td><td>Dish</td><td>Execution</td><td>內容摘要</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM25</code></td><td>Rewrite Layer</td><td>Dish</td><td>Execution</td><td>改寫內容</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM26</code></td><td>Proposal / Rollback Layer</td><td>Dish</td><td>Execution</td><td>提案與回退能力</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM27</code></td><td>Duplicate Detection Layer</td><td>Dish</td><td>Execution</td><td>重複內容檢查</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM28</code></td><td>Queue / Processing View Layer</td><td>Dish</td><td>Execution</td><td>任務排隊與處理狀態視圖</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM29</code></td><td>Export Layer</td><td>Dish</td><td>Execution</td><td>結果輸出</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM30</code></td><td>Delivery Layer</td><td>Dish</td><td>Execution</td><td>將內容送往目標端</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM31</code></td><td>Action Log / Audit Layer</td><td>Dish</td><td>Execution</td><td>操作與審核軌跡</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM32</code></td><td>Browser AI Workbench</td><td>System</td><td>Execution</td><td>瀏覽器內 AI 前處理工作台</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM33</code></td><td>Content Extraction Engine</td><td>Module</td><td>Execution</td><td>DOM / 選取 / HTML / 圖片擷取</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM34</code></td><td>Task-first UI Engine</td><td>Module</td><td>Execution</td><td>以任務卡為主入口的側邊 UI</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM35</code></td><td>Built-in AI Adapter</td><td>Module</td><td>Execution</td><td>內建 AI 優先、本地先、必要時升級雲端</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM36</code></td><td>KM Index Connector</td><td>Module</td><td>Execution</td><td>Source / Index / Card / Relation 連接</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM37</code></td><td>Workbench Buffer</td><td>Module</td><td>Execution</td><td>人機協作的中間緩衝區</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM38</code></td><td>Structured Export Engine</td><td>Module</td><td>Execution</td><td>JSON / CSV / Markdown / HTML 匯出</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM39</code></td><td>Knowledge Card Generator</td><td>Dish</td><td>Execution</td><td>知識卡生成</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM40</code></td><td>Metadata Extractor</td><td>Dish</td><td>Execution</td><td>metadata 與欄位抽取</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM41</code></td><td>Multi-mode Content Cleaner</td><td>Dish</td><td>Execution</td><td>精確版 / 完整版內容清理</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM42</code></td><td>Image Selection &amp; Export</td><td>Dish</td><td>Execution</td><td>圖片擷取、勾選與輸出</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM43</code></td><td>LAN Secure Agent Mesh</td><td>System</td><td>Execution</td><td>內部協作型 Agent Mesh 與操作中控</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM44</code></td><td>Extension Client Layer</td><td>Module</td><td>Execution</td><td>Chrome Extension 節點入口</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM45</code></td><td>Task Router Hub</td><td>Module</td><td>Execution</td><td>中央任務分派與資料整流</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM46</code></td><td>Agent Logging &amp; Audit Hub</td><td>Module</td><td>Execution</td><td>集中 log、audit、trace</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM47</code></td><td>Trust Mode / Secure Channel Layer</td><td>Module</td><td>Execution</td><td>一般/保護/管制模式與輕量安全</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM48</code></td><td>Prompt Governance Module</td><td>Module</td><td>Execution</td><td>Prompt 治理與權限</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM49</code></td><td>Knowledge Package Exchange Module</td><td>Module</td><td>Execution</td><td>zip + 密碼的模組／知識包交換</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM50</code></td><td>Task Routing Capability</td><td>Dish</td><td>Execution</td><td>任務跨節點流動能力</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM51</code></td><td>Human-in-the-loop Confirmation</td><td>Dish</td><td>Execution</td><td>AI 先做、人確認</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM52</code></td><td>ZIP Package Delivery</td><td>Dish</td><td>Execution</td><td>模組包／知識包／更新包交付</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM53</code></td><td>Lightweight Encryption / Encoding Mode</td><td>Dish</td><td>Execution</td><td>輕量加密與編碼模式</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM54</code></td><td>LAN Node Discovery / Registration</td><td>Dish</td><td>Execution</td><td>區網節點發現與註冊</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM55</code></td><td>AI Usage Traceability</td><td>Dish</td><td>Execution</td><td>AI 使用追蹤</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM56</code></td><td>Rule-based Action Decision</td><td>Dish</td><td>Execution</td><td>規則式任務決策</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM57</code></td><td>Cross-device Task Handoff</td><td>Dish</td><td>Execution</td><td>跨裝置任務交接</td><td>既有資產主幹，後續可延伸為產品、教材與 ModelBox 條目。</td><td>Working Draft</td></tr><tr><td><code>MM65</code></td><td>AI Auto Filing</td><td>Module</td><td>Execution</td><td>把 Search 與內容判讀延伸成 AI 自動歸檔能力。</td><td>對應從手動整理升級為 Search -&gt; AI 自動歸檔。</td><td>Working Draft</td></tr><tr><td><code>MM68</code></td><td>Knowledge Audio Export Engine</td><td>Module</td><td>Execution</td><td>把知識內容轉成可發布、可教學的 Audio Asset。</td><td>把原本偏 TTS 功能，提升為 Knowledge -&gt; Audio Asset 的輸出引擎。</td><td>Working Draft</td></tr><tr><td><code>MM69</code></td><td>HITL Markdown Memory System</td><td>System</td><td>Execution</td><td>把 Markdown 升級為 AI 協作的外部記憶與檢核工作表：程式負責穩定拆解，AI / SLM 負責輔助檢查，人類負責最後確認。</td><td>不是單純 Markdown 文件產生器，也不是完整資料庫或全自動 AI 決策系統。核心是人可讀、程式可拆、AI 可輔助檢核的外部記憶工作系統。適合 SOP、狀態表、檢核表、工作紀錄、AI 協作交接資料。</td><td>Candidate</td></tr></tbody></table></div></details><details class="series-detail"><summary>CC 系列｜Concept / Principle / Pattern <span>(31)</span></summary><p>概念、洞見、設計原則與模式類模型菜，負責承接教學與方法論。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>CC01</code></td><td>架構分離 × 體驗整合</td><td>Concept</td><td>Concept</td><td>系統分層設計，但使用體驗可整合</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC02</code></td><td>Calendar-first</td><td>Concept</td><td>Concept</td><td>任務最終落到時間管理</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC03</code></td><td>Generate → Refine</td><td>Pattern</td><td>Concept</td><td>不同模型分工生成與收斂</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC04</code></td><td>AI Operation Layer</td><td>Concept</td><td>Concept</td><td>AI 工具與企業系統之間的操作層</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC05</code></td><td>Local AI × Cloud AI × Human 三層架構</td><td>Concept</td><td>Concept</td><td>本地、雲端、顧問 / 人的分工</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC06</code></td><td>ModelBox 是索引層，不是加工層</td><td>Concept</td><td>Concept</td><td>ModelBox 偏索引與編目，不是重加工</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC07</code></td><td>先流程，後工具</td><td>Principle</td><td>Concept</td><td>流程先跑通，工具再升級</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC08</code></td><td>Task-first Interaction</td><td>Concept</td><td>Concept</td><td>任務為入口，不是聊天</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC09</code></td><td>Chat-assisted Design</td><td>Concept</td><td>Concept</td><td>Chat 是附屬，不是主體</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC10</code></td><td>Cloud-escalation Principle</td><td>Principle</td><td>Concept</td><td>先 local，再必要時升級雲端</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC11</code></td><td>AI Preprocessing Layer</td><td>Concept</td><td>Concept</td><td>AI 先把資料轉成可用素材</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC12</code></td><td>Index-first KM</td><td>Concept</td><td>Concept</td><td>先建索引，不做重推理</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC13</code></td><td>PiP Router Concept</td><td>Concept</td><td>Concept</td><td>PiP 是總機，不是工作區</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC14</code></td><td>PiP Router</td><td>Concept</td><td>Concept</td><td>最上層輕量總機 UI</td><td>屬於抽象概念型條目，可作為教學原則、設計視角與說明骨架。</td><td>Working Draft</td></tr><tr><td><code>CC15</code></td><td>Skill-first with External Options</td><td>Concept</td><td>Concept</td><td>先遵循既有 skill，再由 AI 提供外部可選方案。</td><td>代表 Primary 是你的方法，Alternative 是 AI 建議，不做覆蓋式替代。</td><td>Working Draft</td></tr><tr><td><code>CC16</code></td><td>Non-destructive AI Guidance</td><td>Concept</td><td>Concept</td><td>AI 提供建議時不覆蓋原決策，而是保留使用者主方法與替代方案。</td><td>對應多方案輸出原則，強調 non-destructive guidance。</td><td>Working Draft</td></tr><tr><td><code>CC17</code></td><td>Full-context Storage</td><td>Concept</td><td>Ground Truth</td><td>把完整脈絡保留在檔案系統與版本記錄中，作為後續判讀與追溯依據。</td><td>對應 FS Ground Truth 強化，強調 full-context storage、data lineage 與 audit evidence。</td><td>Working Draft</td></tr><tr><td><code>CC18</code></td><td>Ground Truth First</td><td>Concept</td><td>Ground Truth</td><td>先確認檔案系統與版本證據，再進行 AI 推論、摘要與決策。</td><td>強化 FS 不只是資料來源，而是 evidence / ground truth layer。</td><td>Working Draft</td></tr><tr><td><code>CC19</code></td><td>Task -&gt; Prompt Compiler</td><td>Concept</td><td>Concept</td><td>把 Prompt Workbench 重新理解為 Task 到 AI 行為的編譯器，而不是獨立核心系統。</td><td>用來修正 Prompt Workbench 的定位：應視為 Module。</td><td>Working Draft</td></tr><tr><td><code>CC20</code></td><td>FALO Consulting Center</td><td>Concept</td><td>Concept</td><td>把 FALO 從 AI 工具集合升級為 AI 模型菜諮詢中心的商業定位。</td><td>對外商業定位主軸，用來承接顧問、課程、展示與服務設計。</td><td>Working Draft</td></tr><tr><td><code>CC21</code></td><td>Expert Experience to AI Knowledge</td><td>Concept</td><td>Concept</td><td>專家經驗可以透過資料化、模型化、流程化與任務化，轉成系統能力。</td><td>由 AI 知識工程教材頁映射而來，維持原貌保存，不重寫教材內容。</td><td>Working Draft</td></tr><tr><td><code>CC22</code></td><td>Prompt to Skill</td><td>Concept</td><td>Concept</td><td>Prompt 解決單次溝通，Skill 解決可重複能力。</td><td>由 AI 知識工程教材頁映射而來，維持原貌保存，不重寫教材內容。</td><td>Working Draft</td></tr><tr><td><code>CC23</code></td><td>Workflow to MCP</td><td>Concept</td><td>Concept</td><td>Workflow 解決流程理解，MCP 解決工具連接與邊界治理。</td><td>由 AI 知識工程教材頁映射而來，維持原貌保存，不重寫教材內容。</td><td>Working Draft</td></tr><tr><td><code>CC24</code></td><td>AI Task OS as Teaching Bridge</td><td>Concept</td><td>Concept</td><td>AI Task OS 可作為初學者理解 Agent 工作方式的橋樑。</td><td>由 AI 知識工程教材頁映射而來，維持原貌保存，不重寫教材內容。</td><td>Working Draft</td></tr><tr><td><code>CC25</code></td><td>AI to Delivery Bridge</td><td>Concept</td><td>Concept</td><td>AI 不只回答問題，還要能橋接到真實交付流程與工作環境。</td><td>用來承接顧問與教材定位，讓初學者理解「對話式 AI -&gt; 可交付工作」之間還有一層橋接能力。</td><td>Working Draft</td></tr><tr><td><code>CC26</code></td><td>Local-first Collaboration with Delayed Cloud Sync</td><td>Concept</td><td>Concept</td><td>地端即時協作、雲端延遲保存，是一種可教學、可治理的系統邊界。</td><td>這不是技術細節而已，而是 FALO 在場景系統中可反覆重用的設計原則。</td><td>Working Draft</td></tr><tr><td><code>CC27</code></td><td>Workflow Navigator</td><td>Concept</td><td>Concept</td><td>AI 更像 Workflow 導航器，負責理解情境、提出下一步與候選流程，而不是直接接管整個組織。</td><td>這條概念用來幫初學者理解：FALO 的 AI OS 比較像智慧副駕與導航器，而不是 root-level autonomous AI。</td><td>Working Draft</td></tr><tr><td><code>CC28</code></td><td>AI Runtime Orchestrator</td><td>Concept</td><td>Concept</td><td>Runtime 的重點是協調模型、工具、prompt 與 workflow，不是讓單一 Agent 擁有全部權限。</td><td>這條概念可以對應 Runtime Layer 的教學描述：它做 routing、execution、audit，而不是自行發 key 或決定最終授權。</td><td>Working Draft</td></tr><tr><td><code>CC29</code></td><td>Governance as Workflow</td><td>Concept</td><td>Concept</td><td>治理不是額外文書，而是 request、approval、execute、audit 這條工作流本身。</td><td>這個概念有助於把 ISO 42001 / 27001 的 oversight、least privilege、traceability 轉成可操作的工作流語言。</td><td>Working Draft</td></tr><tr><td><code>CC30</code></td><td>Runtime / Authority Separation</td><td>Principle</td><td>Concept</td><td>AI Runtime Layer 與 Governance / Authority Layer 必須分離，避免執行者同時掌握授權權力。</td><td>這條原則直接對應 separation of duties：Runtime 負責執行，Authority 負責發 key、核准、quota、revoke 與 policy。</td><td>Working Draft</td></tr><tr><td><code>CC31</code></td><td>Temporary AI Execution Key</td><td>Principle</td><td>Concept</td><td>高權限 AI 執行應以 temporary execution key 或 execution ticket 為主，而不是長期持有萬用 key。</td><td>這條原則用來把「AI Runtime 不應永久持有高權限 key」說清楚，並可直接轉成 execution ticket / ephemeral credential 的教材。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>MMM 系列｜Multimodal / Local AI Track <span>(7)</span></summary><p>多模態、影音、Local AI 與前沿能力線，偏應用能力與實驗軌。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>MMM0</code></td><td>本書學習資源頁（教材入口）</td><td>Entry</td><td>MultiModal</td><td>教材網址／資源入口</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM5</code></td><td>轉場觸發機制</td><td>Capability</td><td>MultiModal</td><td>影片節奏與轉場邏輯控制</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM7</code></td><td>文字轉語音（TTS）</td><td>Capability</td><td>MultiModal</td><td>Canva 內建 TTS 等語音輸出</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM8</code></td><td>影片自動上字幕</td><td>Capability</td><td>MultiModal</td><td>影音內容理解與字幕生成</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM9</code></td><td>多螢幕與多來源錄製</td><td>Capability</td><td>MultiModal</td><td>攝影機＋螢幕＋音訊整合</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>Working Draft</td></tr><tr><td><code>MMM10</code></td><td>WebLLM Client-side AI</td><td>Capability</td><td>Local AI</td><td>本地 / 瀏覽器端 AI 能力模組</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>POC Verified</td></tr><tr><td><code>MMM11</code></td><td>Text Search Local AI</td><td>Application</td><td>Local AI</td><td>本地 AI × 文字搜尋導覽</td><td>偏能力線與應用線，後續可視需求拆為更獨立的子清單。</td><td>POC Verified</td></tr></tbody></table></div></details><details class="series-detail"><summary>PM 系列｜AI Task OS / Governance Mainline <span>(12)</span></summary><p>FALO 作為 AI Task OS 的主軸系列，承接任務系統、決策、治理與交付橋接。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>PM01</code></td><td>AI Task OS</td><td>System</td><td>Task OS</td><td>以任務狀態為核心，統一追蹤 Goal、State、Decision 與 Next Step 的 AI 任務作業系統。</td><td>本次升級主軸之一，代表 FALO 從模型菜集合收斂到 AI 任務作業系統。 本版補入 AI 知識工程教材頁，作為 PM01 的教學素材來源。</td><td>Working Draft</td></tr><tr><td><code>PM02</code></td><td>Prompt / Skill / MCP / Agent Evolution</td><td>Module</td><td>Task OS</td><td>將 Prompt -&gt; Skill、Workflow -&gt; MCP、Assistant -&gt; Agent 的能力演進整理為教學素材。</td><td>由 index.html 映射而來，用來幫初學者理解能力演進與邊界治理。</td><td>Model Dish Candidate</td></tr><tr><td><code>PM07</code></td><td>Layered NotebookLM System</td><td>System</td><td>Task OS</td><td>把 Source Notebook 與 Rule Notebook 分層，將資料理解與決策邏輯拆開管理。</td><td>Source Notebook 負責 PDF、OCR、文件摘要與比對；Rule Notebook 負責 decision、pattern、模型菜與顧問邏輯。</td><td>Working Draft</td></tr><tr><td><code>PM08</code></td><td>HITL Rapid Interface Generator</td><td>Module</td><td>Task OS</td><td>讓 AI 依任務快速生成可操作的 HITL 介面，支援 vibe coding 式的人機協作。</td><td>本次將 HITL 從人工介入升級為 AI 可生成的人機協作 UI。</td><td>Working Draft</td></tr><tr><td><code>PM09</code></td><td>AI Interaction Platform</td><td>System</td><td>Task OS</td><td>作為統一對話入口與操作平台，串接所有系統、規則與工作流。</td><td>承接原本 Task OS / Workbench 的入口角色，現在更明確定位為 AI Interaction Platform。</td><td>Working Draft</td></tr><tr><td><code>PM10</code></td><td>Skill-first Decision Engine</td><td>Module</td><td>Task OS</td><td>依照 Skill -&gt; Rule -&gt; Source -&gt; FS 的優先順序進行決策，並保留 Primary 與 Alternative 兩種輸出。</td><td>核心原則是不覆蓋使用者方法，而是先尊重 skill，再提供外部選項。</td><td>Working Draft</td></tr><tr><td><code>PM11</code></td><td>AI Delivery Bridge</td><td>Module</td><td>Task OS</td><td>讓 FALO 能透過 MCP、SSH 與 GitHub push，把對話式 AI 任務橋接到真實工作環境與交付流程。</td><td>面向顧問服務、教材模組與可組件化能力。適用於 ChatGPT Codex、Claude Cowork 等對話式 AI 執行環境，但不綁定單一平台。</td><td>Model Dish Candidate</td></tr><tr><td><code>PM12</code></td><td>Human-centered AI OS</td><td>System</td><td>Task OS</td><td>把 AI 定位成智慧副駕、Workflow 導航器與治理內的執行協調者，而不是擁有無限制權限的自治 Agent。</td><td>FALO 不追求 root-level autonomous AI。AI 可以提供方向、組合模型菜、建議 workflow、理解情境與提供下一步，但高權限操作仍保留 Human 控制。</td><td>Working Draft</td></tr><tr><td><code>PM13</code></td><td>AI Runtime Governance</td><td>Module</td><td>Task OS</td><td>把 AI model routing、AI execution、workflow execution、audit log 與 AI resource event 納入可治理的 Runtime Layer。</td><td>這一層負責真正的 AI 執行與路由，但不應自行控制 authority layer。它更像執行協調器，而不是自帶最終授權的 Agent。</td><td>Working Draft</td></tr><tr><td><code>PM14</code></td><td>AI Resource Governance</td><td>Module</td><td>Task OS</td><td>用 user_id + ai_resource_key + scope 管理 AI 資源使用邊界，並支援範圍、時間、次數、approval_required 與 revoke。</td><td>key 不是萬用權限，而是可限制範圍、時間、次數、狀態與人工核准需求的治理元件。超過邊界時，系統應阻止或提示。</td><td>Model Dish Candidate</td></tr><tr><td><code>PM15</code></td><td>AI Execution Ticket</td><td>Module</td><td>Task OS</td><td>用 temporary execution key / ephemeral AI credential 控制高權限任務，避免 Runtime AI 永久持有敏感權限。</td><td>這代表 AI Execution Ticket / Ephemeral AI Credential 的做法：request、approval、temporary issue、execute、expire / revoke。</td><td>Model Dish Candidate</td></tr><tr><td><code>PM16</code></td><td>HITL Execution Workflow</td><td>Module</td><td>Task OS</td><td>把 AI 建議、Human approve、workflow execute 與 log record 串成可稽核的人控式執行流程。</td><td>和傳統 RPA 不同，FALO 不是固定規則後直接全自動執行，而是先由 AI 理解情境與建議 workflow，再由人類保留高權限決策與執行控制。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>FS 系列｜Ground Truth / Evidence Layer <span>(0)</span></summary><p>Ground Truth 與 Evidence Layer 的保留區，目前欄位已預留，但本版尚未展開具名條目。</p><p>目前此系列在 <code>v0.11</code> 沒有具名條目，先保留為分類與欄位預留區。</p></details><details class="series-detail"><summary>TEACH 系列｜Teaching Materials <span>(3)</span></summary><p>從教材、案例、教學頁映射出的模型菜，負責把概念轉成可教內容。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>TEACH01</code></td><td>AI Knowledge Engineering Intro</td><td>System</td><td>Teaching</td><td>把專家經驗轉成 AI 知識工程的入門教材。</td><td>主軸是把專家經驗、工作流、Prompt / Skill / MCP / Agent 轉成 AI 可學習、可教學、可運用的知識工程。</td><td>Model Dish Candidate</td></tr><tr><td><code>TEACH02</code></td><td>Workflow Decomposition Teaching Case</td><td>Module</td><td>Teaching</td><td>以空氣鼓棒、設備維修、客服、作文診斷、餐廳出餐等案例，教 AI 如何拆解與優化工作流。</td><td>對應 index.html 中的主案例與遷移案例，強調從專家經驗中拆出流程。</td><td>Model Dish Candidate</td></tr><tr><td><code>TEACH03</code></td><td>Resource-bounded AI Task Application</td><td>Module</td><td>Teaching</td><td>說明 AI 如何在既有資料、規則、案例與工具內完成任務。</td><td>對應資源限定任務應用與工具邊界的教學說明。</td><td>Model Dish Candidate</td></tr></tbody></table></div></details><details class="series-detail"><summary>ASSET 系列｜Visual Assets <span>(2)</span></summary><p>展示型、視覺型、語意導航型模型菜資產，偏 showcase、教學入口與外部說明價值。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>ASSET01</code></td><td>Sampuru AI Solution Map</td><td>Visual Asset / Model Dish</td><td>Visual Navigation / Showcase / Semantic Map</td><td>Sampuru AI Solution Map 是一張可互動的 AI Solution 語意地圖，用四個圖像區域呈現 FALO 模型菜與 Visual Asset 的展示型態。</td><td>這不是資料庫系統，也不是一般網站分類頁。它是 Step 3 的影像式分類地圖 MVP，用來讓使用者透過地圖理解 FALO AI 解決方案分布。</td><td>POC complete / MVP usable</td></tr><tr><td><code>ASSET02</code></td><td>Local-first IM Workbench Visual Explainer Set</td><td>Visual Asset Set / Model Dish</td><td>Visual Storytelling / Teaching / System Explainer</td><td>以四張單頁圖解，分別從簡單版、情境版、情境精華版與最複雜版，展示 Local-first IM Workbench 的不同敘事深度與系統切面。</td><td>這四張是一套，不應拆成四個零散條目。適合用於教學、顧問提案、系統說明與視覺導覽；同時作為 IM01 的外部展示資產。</td><td>POC complete / Teaching-ready</td></tr></tbody></table></div></details><details class="series-detail"><summary>TRACE 系列｜AI Learning Trace <span>(0)</span></summary><p>AI 學習履歷與 GitHub / Pages 資產治理保留區，本版欄位已規劃，後續再補實體條目。</p><p>目前此系列在 <code>v0.11</code> 沒有具名條目，先保留為分類與欄位預留區。</p></details><details class="series-detail"><summary>NewsOps 系列｜Project Model Dishes <span>(18)</span></summary><p>專案型系統族群，涵蓋 ETL、監測、編修、輸出與審核的整條運作鏈。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>NO01</code></td><td>Information Collection Center</td><td>System</td><td>NewsOps</td><td>資訊入口的統一中控</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO02</code></td><td>NewsOps System</td><td>System</td><td>NewsOps</td><td>ETL + Scheduler + Monitor 聯合作戰系統</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO03</code></td><td>Crawler Center</td><td>Module</td><td>NewsOps</td><td>Extract / Transform / Load 與卡帶式來源</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO04</code></td><td>Scheduler Center</td><td>Module</td><td>NewsOps</td><td>cron 到 heartbeat / orchestration</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO05</code></td><td>Monitor Center</td><td>Module</td><td>NewsOps</td><td>log、狀態監測、事件追蹤</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO06</code></td><td>Crawler Result Center（CRC）</td><td>Module</td><td>NewsOps</td><td>結果管理、編修、匯出、queue / proposal / rollback</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO07</code></td><td>Intake Layer</td><td>Module</td><td>NewsOps</td><td>Event-driven intake / localhost / UI / extension 接口</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO08</code></td><td>Translation Layer</td><td>Dish</td><td>NewsOps</td><td>翻譯</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO09</code></td><td>Summarization Layer</td><td>Dish</td><td>NewsOps</td><td>摘要</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO10</code></td><td>Rewrite Layer</td><td>Dish</td><td>NewsOps</td><td>改稿</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO11</code></td><td>Proposal / Rollback Layer</td><td>Dish</td><td>NewsOps</td><td>提案 / 回退</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO12</code></td><td>Duplicate Detection Layer</td><td>Dish</td><td>NewsOps</td><td>重複檢測</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO13</code></td><td>Queue / Processing View Layer</td><td>Dish</td><td>NewsOps</td><td>排程與處理視圖</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO14</code></td><td>Export Layer</td><td>Dish</td><td>NewsOps</td><td>CSV / Excel / JSON 匯出</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO15</code></td><td>Delivery Layer</td><td>Dish</td><td>NewsOps</td><td>email / 通知交付</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO16</code></td><td>Orchestration Layer</td><td>Dish</td><td>NewsOps</td><td>未來 orchestration</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO17</code></td><td>Heartbeat Layer</td><td>Dish</td><td>NewsOps</td><td>未來 heartbeat</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr><tr><td><code>NO18</code></td><td>Action Log / Audit Layer</td><td>Dish</td><td>NewsOps</td><td>操作與審核層</td><td>專案族群模型菜，目前先收錄於總表，後續可獨立整理為專門 catalog。</td><td>Working Draft</td></tr></tbody></table></div></details><details class="series-detail"><summary>IM 系列｜Local-first Collaboration Systems <span>(9)</span></summary><p>Local-first IM 與協作工作台系統，承接 communication OS、prompt 管理、資料閉環與治理執行邊界。</p><div class="table-wrap"><table><thead><tr><th>Code</th><th>名稱</th><th>類型</th><th>層級 / 家族</th><th>一句話用途</th><th>備註</th><th>狀態</th></tr></thead><tbody><tr><td><code>IM01</code></td><td>Local-first IM Workbench</td><td>System</td><td>Collaboration System</td><td>把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。</td><td>建議名稱可理解為 Local-first IM Workbench，也可視為 AI Client Communication Workbench。它介於 System / Module 之間，但目前以系統級模型菜原型收錄。Dev 版 index.html 偏實作介面；external-overview.html 偏外部說明版。 另有一組四張單頁視覺圖解，已收錄為 ASSET02，作為 IM01 的外部展示資產。</td><td>MVP usable</td></tr><tr><td><code>IM02</code></td><td>Local-first IM Dev Client</td><td>Module</td><td>Collaboration System</td><td>Local-first IM Dev 實作介面版，用來測試多人、多 client、AI 角色、Prompt 管理、資料閉環與延遲同步。</td><td>這份 index.html 是 Dev 實作介面版，偏操作與測試；external-overview.html 則是對外說明版，偏非工程讀者。</td><td>MVP usable</td></tr><tr><td><code>IM03</code></td><td>Local IM Server</td><td>Module</td><td>Collaboration System</td><td>作為地端中樞，負責接收 client 連線、管理在線狀態、轉送訊息並立即寫入本地紀錄。</td><td>公開版只保留架構角色與能力摘要，不暴露不必要的環境細節。</td><td>MVP usable</td></tr><tr><td><code>IM04</code></td><td>Identity Module</td><td>Module</td><td>Collaboration System</td><td>把 user_id、client_id 與 session trace 分開管理，讓身份、登入入口與稽核線索可以被清楚教學與追蹤。</td><td>第一版重點是教學與稽核，不是複雜權限系統。</td><td>MVP usable</td></tr><tr><td><code>IM05</code></td><td>Message Router</td><td>Module</td><td>Collaboration System</td><td>判斷訊息是 room message 還是 direct message，並把它送到對應的 client 或 room 成員。</td><td>適合拿來教初學者理解最小可行的訊息轉送邏輯。</td><td>MVP usable</td></tr><tr><td><code>IM06</code></td><td>Local Message Log</td><td>Module</td><td>Collaboration System</td><td>把本地訊息紀錄作為第一真實來源，支援後續查詢、匯出與未來批量同步。</td><td>公開版保留資料角色說明，不暴露 runtime data 本身。</td><td>MVP usable</td></tr><tr><td><code>IM07</code></td><td>Admin View / Admin API</td><td>Module</td><td>Collaboration System</td><td>提供開發測試 / 稽核視角，讓使用者能查看在線狀態、全域紀錄、連線資訊、IP / session / room 狀態與備份資訊。</td><td>目前偏全員管理員視角，方便展示、測試與稽核；與 Communication OS、AI Logging Shell、Local Data Hub 有高度關聯。</td><td>MVP usable</td></tr><tr><td><code>IM08</code></td><td>Personal Prompt Manager</td><td>Module</td><td>Collaboration System</td><td>把 Prompt 新增、分類、搜尋、匯入匯出與帶入聊天室整合在個人 Prompt 管理器中。</td><td>這一模組讓 IM 不只是聊天，而是可承接 AI 指令、Prompt 治理與教學資產。</td><td>MVP usable</td></tr><tr><td><code>IM09</code></td><td>Backup Sync Queue</td><td>Module</td><td>Collaboration System</td><td>把 JSON / Excel 匯出匯入、本機回灌、GAS Lite 部署包與 Google Sheet 延遲同步整理成資料閉環隊列。</td><td>核心邊界是 Local-first、Cloud delayed save；同時支援資料閉環與 GAS / Google Sheet 備份路線。</td><td>MVP usable</td></tr></tbody></table></div></details></div></section>
+        <section class="panel tab-content panel-privacy"><h2>公開可讀的詳細版</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>公開版保留什麼</strong><p>分類、模組、能力、關聯、用途、升版脈絡與教學密度，都盡量保留。</p></article><article class="card"><strong>公開版收斂什麼</strong><p>本機絕對路徑、過細私有執行痕跡、不必要的環境識別資訊，以及不適合直接公開的敏感細節。</p></article><article class="card"><strong>公開版不是什麼</strong><p>不是薄摘要，也不是去版權重寫版，而是描述完整、精度較低的公開版本。</p></article></div></section>
+        <section class="panel tab-content panel-evidence"><h2>證據與來源</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>治理主線主要來源</strong><p><code>apps/local-first-im/docs/admin-model-prompt.md</code><br><code>apps/local-first-im/docs/external-overview.html</code><br><code>apps/local-first-im/static/index.html</code></p></article><article class="card"><strong>IM 系列主要來源</strong><p><code>docs/mvp/local-first-im-browser-mvp.md</code><br><code>apps/local-first-im/README.md</code><br><code>apps/local-first-im/VERSION.md</code><br><code>apps/local-first-im/server.py</code></p></article><article class="card"><strong>既有主線承接</strong><p><code>docs/catalog/falo-model-dish-registry-v0.10.md</code><br><code>docs/catalog/falo-model-dish-registry-v0.10.html</code><br><code>docs/catalog/FALO_Model_Dish_Registry_v0.10.xlsx</code></p></article></div></section>
+        <section class="panel tab-content panel-affected"><h2>受影響條目</h2><div class="grid" style="margin-top:16px;"><article class="card"><strong>PM12 · Human-centered AI OS</strong><p>Working Draft</p><p>把 AI 定位成智慧副駕與人類中心 AI OS。</p></article><article class="card"><strong>PM13 · AI Runtime Governance</strong><p>Working Draft</p><p>把 AI execution、routing、audit 與 resource event 收進 Runtime Layer。</p></article><article class="card"><strong>PM14 · AI Resource Governance</strong><p>Model Dish Candidate</p><p>以 <code>user_id + ai_resource_key + scope</code> 管理 AI 資源邊界。</p></article><article class="card"><strong>PM15 · AI Execution Ticket</strong><p>Model Dish Candidate</p><p>以 temporary key / execution ticket 控制高權限任務。</p></article><article class="card"><strong>PM16 · HITL Execution Workflow</strong><p>Working Draft</p><p>把 AI Suggest、Human Approve、Workflow Execute 與 Log Record 串成 HITL 流程。</p></article><article class="card"><strong>CC27 · Workflow Navigator</strong><p>Working Draft</p><p>AI 更像 Workflow 導航器，而不是直接接管整個組織。</p></article><article class="card"><strong>CC28 · AI Runtime Orchestrator</strong><p>Working Draft</p><p>Runtime 的重點是協調模型、工具、prompt 與 workflow。</p></article><article class="card"><strong>CC29 · Governance as Workflow</strong><p>Working Draft</p><p>治理不是額外文書，而是 request、approval、execute、audit 本身。</p></article><article class="card"><strong>CC30 · Runtime / Authority Separation</strong><p>Working Draft</p><p>Runtime 與 Authority 必須分離，避免執行者同時掌握授權權力。</p></article><article class="card"><strong>CC31 · Temporary AI Execution Key</strong><p>Working Draft</p><p>高權限 AI 執行應以 temporary execution key / execution ticket 為主。</p></article><article class="card"><strong>PM11 · AI Delivery Bridge</strong><p>Model Dish Candidate</p><p>持續承接 MCP、SSH 與 GitHub push 的交付橋接能力。</p></article><article class="card"><strong>IM01 · Local-first IM Workbench</strong><p>MVP usable</p><p>持續作為 PM / IM / Workflow Layer 的主要場景系統。</p></article></div></section>
       </div>
     </section>
-
-    <footer class="footer">
-      <p>FALO x Force Cheng 2026/5/6</p>
-      <p>Release v0.11 · 公開可讀的詳細版</p>
-      <p>Last Updated 2026-05-06 23:18:00 Asia/Taipei</p>
-    </footer>
-  </main>
-
-<script>
-(() => {
-  const shell = document.querySelector('[data-universal-search]');
-  if (!shell) return;
-
-  const root = document.querySelector('.page') || document.body;
-  const input = shell.querySelector('input');
-  const clearButton = shell.querySelector('[data-search-clear]');
-  const status = shell.querySelector('[data-search-status]');
-  const itemSelector = 'tbody tr, .entry-card, .card, .rule-card, .relationship, .list li';
-  const detailsSelector = 'details.series-detail';
-  const items = Array.from(root.querySelectorAll(itemSelector)).filter((el) => !shell.contains(el));
-  const details = Array.from(root.querySelectorAll(detailsSelector)).filter((el) => !shell.contains(el));
-  const initialDetailsState = new Map(details.map((el) => [el, el.open]));
-
-  const normalize = (value) => (value || '').toLowerCase().replace(/\s+/g, ' ').trim();
-  const matches = (el, query) => normalize(el.textContent).includes(query);
-
-  function updateStatus(query, matchedCount) {
-    if (!query) {
-      status.textContent = '顯示全部內容';
-      return;
-    }
-    status.textContent = matchedCount > 0
-      ? `找到 ${matchedCount} 筆符合內容`
-      : `找不到「${input.value.trim()}」相關內容`;
-  }
-
-  function applySearch() {
-    const query = normalize(input.value);
-    const inSearch = Boolean(query);
-    document.body.classList.toggle('search-mode', inSearch);
-
-    let matchedCount = 0;
-    let firstMatch = null;
-
-    items.forEach((el) => {
-      const matched = !inSearch || matches(el, query);
-      el.classList.toggle('search-hidden', !matched);
-      el.classList.toggle('search-highlight', matched && inSearch);
-      if (matched && inSearch) {
-        matchedCount += 1;
-        if (!firstMatch) firstMatch = el;
+    <p class="footer">FALO x Force Cheng 2026/5/6 · 2026-05-07 00:54:49 Asia/Taipei</p>
+  </div>
+  <script>
+    (() => {
+      const shell = document.querySelector('.search-shell');
+      const input = shell?.querySelector('input[type="search"]');
+      const clearBtn = shell?.querySelector('[data-search-clear]');
+      const status = shell?.querySelector('[data-search-status]');
+      const detailBlocks = Array.from(document.querySelectorAll('details.series-detail'));
+      const tabContainer = document.querySelector('.tabs');
+      if (!input || !tabContainer) return;
+      const searchable = Array.from(document.querySelectorAll('.tab-content .card, .tab-content table tbody tr, .tab-content li, .tab-content details.series-detail'));
+      const norm = (value) => (value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      function updateSearch() {
+        const query = norm(input.value);
+        let matches = 0;
+        if (!query) {
+          tabContainer.classList.remove('search-mode');
+          searchable.forEach(el => el.classList.remove('search-hidden'));
+          detailBlocks.forEach(d => d.open = false);
+          if (status) status.textContent = '顯示全部內容';
+          return;
+        }
+        tabContainer.classList.add('search-mode');
+        searchable.forEach(el => {
+          const text = norm(el.innerText || el.textContent);
+          const hit = text.includes(query);
+          el.classList.toggle('search-hidden', !hit);
+          if (hit) matches += 1;
+        });
+        detailBlocks.forEach(d => d.open = true);
+        if (status) status.textContent = `找到 ${matches} 個符合區塊`;
       }
-    });
-
-    details.forEach((el) => {
-      if (inSearch) {
-        const detailMatched = matches(el, query) || Array.from(el.querySelectorAll(itemSelector)).some((child) => !child.classList.contains('search-hidden'));
-        el.classList.toggle('search-hidden', !detailMatched);
-        el.open = detailMatched;
-      } else {
-        el.classList.remove('search-hidden');
-        el.open = initialDetailsState.get(el) || false;
-      }
-    });
-
-    updateStatus(query, matchedCount);
-
-  }
-
-  input.addEventListener('input', applySearch);
-  clearButton.addEventListener('click', () => {
-    input.value = '';
-    applySearch();
-    input.focus();
-  });
-  input.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      input.value = '';
-      applySearch();
-      input.blur();
-    }
-  });
-
-  applySearch();
-})();
-</script>
-
+      input.addEventListener('input', updateSearch);
+      clearBtn?.addEventListener('click', () => { input.value = ''; updateSearch(); input.focus(); });
+    })();
+  </script>
 </body>
 </html>
