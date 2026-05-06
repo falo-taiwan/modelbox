@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sampuru CMS Local Manager</title>
+  <style>
+    :root {
+      --bg: #f7f7f4;
+      --surface: #ffffff;
+      --ink: #1f2933;
+      --muted: #607080;
+      --line: #d9ded7;
+      --accent: #1f7a68;
+      --accent-2: #b54e3c;
+      --ready: #1f7a68;
+      --draft: #a66a00;
+      --published: #325ea8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 32px 0 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    main {
+      padding: 24px 0 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .metric {
+      display: block;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+
+    .label {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--accent);
+      text-decoration: none;
+      font: inherit;
+      font-weight: 600;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    .button.primary {
+      color: #ffffff;
+      background: var(--accent);
+    }
+
+    .button[disabled] {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef3ef;
+      color: #34404a;
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #f2eee4;
+      color: var(--draft);
+    }
+
+    .note {
+      margin-top: 18px;
+      border-left: 4px solid var(--accent-2);
+      padding-left: 14px;
+      color: var(--muted);
+    }
+
+    .figure {
+      margin: 14px 0 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .boundary {
+      max-width: 260px;
+      color: var(--muted);
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-head h2 {
+      margin-bottom: 4px;
+    }
+
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 12px 0;
+    }
+
+    .control-row label {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .control-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .control-row select {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .control-row input {
+      min-height: 36px;
+      min-width: min(360px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 10px;
+      background: #ffffff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .thumb-button {
+      display: block;
+      width: 118px;
+      height: 76px;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+      cursor: zoom-in;
+    }
+
+    .thumb-button img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .pagination {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pagination-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .preview-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(20, 28, 36, 0.72);
+    }
+
+    .preview-modal.is-open {
+      display: flex;
+    }
+
+    .preview-dialog {
+      width: min(1120px, 100%);
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .preview-head {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .preview-head h3 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .preview-close {
+      min-width: 38px;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .preview-body {
+      padding: 16px;
+    }
+
+    .preview-body img {
+      display: block;
+      width: 100%;
+      max-height: 72vh;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .preview-meta {
+      margin-top: 12px;
+      color: var(--muted);
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 18px 0;
+      color: var(--muted);
+      font-size: 14px;
+      background: var(--surface);
+    }
+
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .hero {
+        padding-top: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <h1>Sampuru CMS Local Manager</h1>
+      <p class="muted">本地端 CMS 雛形，用來快速查看 Visual Asset Cards、模型菜資產、進度與工作紀錄。</p>
+      <div class="actions">
+        <a class="button primary" href="/content/dish-assets/progress-index.md" target="_blank" rel="noopener">查看進度表</a>
+        <a class="button primary" href="/content/dish-assets/html/sampuru-map/sampuru-map-professional.html" target="_blank" rel="noopener">開啟影像地圖</a>
+        <a class="button" href="/content/dish-assets/workflow-log.md" target="_blank" rel="noopener">查看工作紀錄</a>
+        <a class="button" href="/content/dish-assets/backlog.md" target="_blank" rel="noopener">查看 Backlog</a>
+        <a class="button" href="/content/dish-assets/visual-assets/index.md" target="_blank" rel="noopener">查看 Visual Asset Index</a>
+        <a class="button" href="/content/dish-assets/markdown/dish-template.md" target="_blank" rel="noopener">查看 Markdown 模板</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="grid" aria-label="資產摘要">
+        <div class="panel">
+          <span class="metric">0</span>
+          <span class="label">正式模型菜資產</span>
+        </div>
+        <div class="panel">
+          <span class="metric">9</span>
+          <span class="label">Visual Asset Topics</span>
+        </div>
+        <div class="panel">
+          <span class="metric">1</span>
+          <span class="label">Markdown 模板</span>
+        </div>
+        <div class="panel">
+          <span class="metric">1</span>
+          <span class="label">核心標準參考</span>
+        </div>
+        <div class="panel">
+          <span class="metric">MVP</span>
+          <span class="label">目前管理狀態</span>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top: 18px;">
+        <h2>Backlog：概念排程與實作示範線</h2>
+        <p>以下項目只先建立工作記憶，不進入目前主線，不立即建立 Visual Asset Card，也不接入 Sampuru Map。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>項目</th>
+                <th>類型</th>
+                <th>定位</th>
+                <th>狀態</th>
+                <th>觸發條件</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>concept-001</td>
+                <td>ETL 模型大套餐</td>
+                <td>Core System Dish</td>
+                <td>Composable ETL / AI Workflow / Data Flow 世界觀</td>
+                <td><span class="status">concept backlog</span></td>
+                <td>Step3 與核心流程穩定後</td>
+              </tr>
+              <tr>
+                <td>concept-002</td>
+                <td>問卷系統</td>
+                <td>Mini Dish</td>
+                <td>AI-native Intake Workflow，AI 原生互動式資料入口</td>
+                <td><span class="status">concept backlog</span></td>
+                <td>ETL 大套餐方向確認後</td>
+              </tr>
+              <tr>
+                <td>concept-003</td>
+                <td>Model Selection / Routing 大套餐</td>
+                <td>Core System Dish</td>
+                <td>AI 模型選擇與任務匹配系統</td>
+                <td><span class="status">concept backlog</span></td>
+                <td>AI Routing / Task OS 線校準後</td>
+              </tr>
+              <tr>
+                <td>concept-004</td>
+                <td>Build-in AI 模型小菜</td>
+                <td>Mini Dish</td>
+                <td>平台內建 AI 能力的小元件組裝觀念</td>
+                <td><span class="status">concept backlog</span></td>
+                <td>Model Routing 與工具庫分類校準後</td>
+              </tr>
+              <tr>
+                <td>concept-005</td>
+                <td>Markdown Operating Sheet</td>
+                <td>Workflow / Memory Dish</td>
+                <td>外部記憶、規則拆解與 HITL 檢核工作表</td>
+                <td><span class="status">concept backlog</span></td>
+                <td>Local Manager 狀態區與 MD 檢核規則整理時</td>
+              </tr>
+              <tr>
+                <td>concept-006</td>
+                <td>客製化 IM 系統</td>
+                <td>System / Interaction Dish</td>
+                <td>協作、通知、AI 介入與工作流互動的客製化訊息介面</td>
+                <td><span class="status">concept backlog</span></td>
+                <td>Sampuru 互動層與 HITL Workflow 需要整理時</td>
+              </tr>
+              <tr>
+                <td>demo-001</td>
+                <td>名片 -> CRM -> BI</td>
+                <td>Demo Track</td>
+                <td>從接觸點到決策系統的最小 AI 商業閉環</td>
+                <td><span class="status">backlog</span></td>
+                <td>Step3 與核心流程穩定後</td>
+              </tr>
+              <tr>
+                <td>demo-002</td>
+                <td>Chrome 外掛：Prompt 指令管理</td>
+                <td>Demo Track</td>
+                <td>AI Workflow / Prompt / Context / Interaction 的進階系統</td>
+                <td><span class="status">backlog</span></td>
+                <td>Step3 與核心流程穩定後</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <a class="button" href="/content/dish-assets/backlog.md" target="_blank" rel="noopener">查看 Backlog 詳細內容</a>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>目前模型菜資產</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Dish ID</th>
+                <th>菜名</th>
+                <th>狀態</th>
+                <th>Markdown</th>
+                <th>HTML</th>
+                <th>最近更新</th>
+                <th>備註</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>-</td>
+                <td>尚未建立正式菜單資產</td>
+                <td><span class="status">setup</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>2026-05-05</td>
+                <td>已建立資產庫、模板、進度表與工作紀錄。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">下一步：收到第一道模型菜需求後，建立對應 Markdown 主記憶與 Single-file HTML 展示版，並同步更新進度表與工作紀錄。</p>
+      </section>
+
+      <section class="panel" style="margin-top: 18px;">
+        <h2>Finalized Topics</h2>
+        <p><strong>Topic-first, Image-second。</strong>已定稿 topic 會顯示圖片數量、完整度與主要入口。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Topic ID</th>
+                <th>Topic</th>
+                <th>Status</th>
+                <th>Images</th>
+                <th>Completeness</th>
+                <th>Tags</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>sampuru-solution-showcase</td>
+                <td>Falo Sampuru — AI Solution Showcase</td>
+                <td><span class="status">finalized</span></td>
+                <td>2</td>
+                <td>structure 90 / content 80 / visual 90</td>
+                <td class="boundary">falo-sampuru, ai-solution-showcase, falo-framework, visual-explanation, solution-design</td>
+                <td>
+                  <a href="/content/dish-assets/visual-assets/html/sampuru-core-mental-model.html" target="_blank" rel="noopener">HTML Card</a><br>
+                  <a href="/content/dish-assets/visual-assets/markdown/sampuru-core-mental-model.md" target="_blank" rel="noopener">Markdown</a><br>
+                  <a href="/content/dish-assets/visual-assets/data/visual-assets.json" target="_blank" rel="noopener">JSON</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <a class="button primary" href="/content/dish-assets/visual-assets/html/sampuru-core-mental-model.html" target="_blank" rel="noopener">開啟 HTML Card</a>
+          <a class="button" href="/content/dish-assets/visual-assets/markdown/sampuru-core-mental-model.md" target="_blank" rel="noopener">查看 Markdown 記憶</a>
+          <a class="button" href="/content/dish-assets/visual-assets/data/visual-assets.json" target="_blank" rel="noopener">查看 JSON</a>
+        </div>
+        <figure class="figure">
+          <img src="/content/dish-assets/visual-assets/images/sampuru-solution-showcase/img_01_sampuru-core-mental-model.jpg" alt="Falo Sampuru AI Solution Showcase 核心心智模型圖">
+        </figure>
+      </section>
+
+      <section class="panel" style="margin-top: 18px;">
+        <h2>Unprocessed Images</h2>
+        <p>單純丟圖片且沒有指示時，圖片會先進入 unprocessed pool，不自動建立 Topic，也不自動合併。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Image ID</th>
+                <th>Status</th>
+                <th>File</th>
+                <th>Linked Topic</th>
+                <th>HTML</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="5">目前沒有未處理圖片。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top: 18px;">
+        <div class="section-head">
+          <div>
+            <h2>Mapped Images</h2>
+            <p>已歸入 topic 的圖片仍可從這裡快速查看縮圖、放大預覽、單圖頁與原始圖檔。</p>
+          </div>
+          <div class="actions" style="margin-top: 0;">
+            <button class="button primary" type="button" aria-pressed="true">清單模式</button>
+            <a class="button" href="/content/dish-assets/visual-assets/html/mapped-images-thumbnail-board.html" target="_blank" rel="noopener">縮圖模式（新視窗）</a>
+          </div>
+        </div>
+        <div class="control-row" aria-label="清單排序與分頁設定">
+          <label for="mapped-list-search">搜尋</label>
+          <input id="mapped-list-search" type="search" placeholder="搜尋 Image ID、topic、描述、備註、tags">
+          <div class="control-group" aria-label="清單排序與方向">
+            <label for="mapped-list-sort">排序</label>
+            <select id="mapped-list-sort">
+              <option value="createdAt">依建立時間</option>
+              <option value="fileMtime" selected>依檔案更新時間</option>
+              <option value="updatedAt">依資料更新時間</option>
+              <option value="topic">依 Topic</option>
+              <option value="role">依 Easy / Hard</option>
+              <option value="status">依狀態</option>
+              <option value="id">依 Image ID</option>
+            </select>
+            <button class="button" type="button" id="mapped-list-sort-direction" aria-pressed="true">降冪</button>
+          </div>
+          <label for="mapped-list-page-size">每頁顯示</label>
+          <select id="mapped-list-page-size">
+            <option value="4">4</option>
+            <option value="6">6</option>
+            <option value="10">10</option>
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Thumbnail</th>
+                <th>Image ID</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Linked Topic</th>
+                <th>Description</th>
+                <th>Embedded Backup</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody id="mapped-images-list">
+              <tr>
+                <td colspan="8">Loading mapped images...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" aria-label="Mapped Images 清單分頁">
+          <span id="mapped-list-summary">-</span>
+          <div class="pagination-controls">
+            <button class="button" type="button" id="mapped-list-prev">上一頁</button>
+            <span id="mapped-list-page-label">Page 1 / 1</span>
+            <button class="button" type="button" id="mapped-list-next">下一頁</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="preview-modal" id="image-preview-modal" role="dialog" aria-modal="true" aria-labelledby="image-preview-title">
+        <div class="preview-dialog">
+          <div class="preview-head">
+            <div>
+              <h3 id="image-preview-title">Image Preview</h3>
+              <p class="muted" id="image-preview-subtitle"></p>
+            </div>
+            <button class="preview-close" type="button" id="image-preview-close" aria-label="Close preview">×</button>
+          </div>
+          <div class="preview-body">
+            <img id="image-preview-img" src="" alt="">
+            <p class="preview-meta" id="image-preview-description"></p>
+            <div class="actions">
+              <a class="button primary" id="image-preview-knowledge" href="#" target="_blank" rel="noopener">Open Knowledge Card</a>
+              <a class="button" id="image-preview-page" href="#" target="_blank" rel="noopener">Open Image Page</a>
+              <a class="button" id="image-preview-file" href="#" target="_blank" rel="noopener">Open Image File</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="panel" style="margin-top: 18px;">
+        <h2>Usage Boundary</h2>
+        <p>系統負責整理與顯示狀態，但不替 FF 自動決定 Topic。沒有明確指示的圖片，一律先放進 unprocessed pool。</p>
+      </section>
+
+      <section class="panel" style="margin-top: 18px;">
+        <h2>Falo Visual / Web Project Progress</h2>
+        <p>本區登錄 Falo Visual / Web 的內容來源、已完成項目與後續 Step 2 / Step 3。GitHub Pages 只登錄來源狀態，不在此分析內容。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Status</th>
+                <th>Summary</th>
+                <th>Next Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GitHub Pages sources</td>
+                <td><span class="status">registered</span></td>
+                <td>https://forceai0001-commits.github.io/、https://falo-taiwan.github.io</td>
+                <td>作為 menu nodes / map nodes / demo articles 來源</td>
+              </tr>
+              <tr>
+                <td>模型菜清單 v0.09b</td>
+                <td><span class="status">done</span></td>
+                <td>GitHub Pages 結果已存入 docs/catalog/falo-model-dish-registry-v0.09b.md</td>
+                <td><a href="/docs/catalog/falo-model-dish-registry-v0.09b.md" target="_blank" rel="noopener">開啟 v0.09b registry</a></td>
+              </tr>
+              <tr>
+                <td>Step 2</td>
+                <td><span class="status">planned</span></td>
+                <td>建立 high-end narrative pages：force.html / faloer.html</td>
+                <td>先做 v1 outline 與可上線 HTML</td>
+              </tr>
+              <tr>
+                <td>Step 3</td>
+                <td><span class="status">planned</span></td>
+                <td>建立 Sampuru visual navigation map，包含 Flow / System / Role / Concept 四種展示型態</td>
+                <td><a href="/content/dish-assets/html/sampuru-map/sampuru-map-professional.html" target="_blank" rel="noopener">開啟影像地圖 v0.1</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <a class="button" href="/content/dish-assets/progress-index.md" target="_blank" rel="noopener">查看完整 progress registry</a>
+          <a class="button" href="/content/dish-assets/backlog.md" target="_blank" rel="noopener">查看 Backlog Concept Notes</a>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top: 18px;">
+        <h2>工作原則</h2>
+        <p>本區不使用 DB。這是為了讓 Markdown 能被 AI、FF 與其他電腦直接讀取，先累積內容資產，再決定是否接 Falo Web / CMS。</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">FALO Model Dish Assets | Local-first content memory | 2026-05-05</div>
+  </footer>
+  <script>
+    const mappedImages = [
+      {
+        id: "img_01",
+        role: "overview",
+        status: "mapped",
+        linkedTopic: "sampuru-solution-showcase",
+        description: "說明 Falo Sampuru 作為 AI Solution Showcase 的整體心智模型與使用者旅程。",
+        annotation: "這是本主題的核心圖，用來對齊 Discover、Understand、Choose、Apply 的整體方向。",
+        tags: ["core-mental-model", "solution-showcase", "user-journey", "cms-reference"],
+        createdAt: "2026-05-05T12:52:15+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T12:52:15+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/img_01.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/img_01.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/img_01_sampuru-core-mental-model.html",
+        imageFile: "/content/dish-assets/visual-assets/images/sampuru-solution-showcase/img_01_sampuru-core-mental-model.jpg"
+      },
+      {
+        id: "img_02",
+        role: "explain",
+        status: "mapped",
+        linkedTopic: "sampuru-solution-showcase",
+        description: "用餐廳經營隱喻說明 Falo AI 從模型 POC、菜譜 SOP、試做模組化到真實系統客製化的落地四部曲。",
+        annotation: "這張圖補充說明 Sampuru 背後的 AI 落地方法，不獨立成新的主題。",
+        tags: ["restaurant-metaphor", "ai-application", "landing-method", "process-design"],
+        createdAt: "2026-05-05T12:52:15+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T12:52:15+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/img_02.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/img_02.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/img_02_falo-ai-restaurant-landing-method.html",
+        imageFile: "/content/dish-assets/visual-assets/images/sampuru-solution-showcase/img_02_falo-ai-restaurant-landing-method.png"
+      },
+      {
+        id: "falo-task-system_img_01_easy",
+        role: "easy",
+        status: "mapped",
+        linkedTopic: "falo-task-system-easy-hard",
+        description: "Falo 任務系統的 Easy 版本，用於快速理解與入門說明。",
+        annotation: "這張圖適合作為第一層理解入口，先讓讀者抓到 Falo 任務系統的基本輪廓。",
+        tags: ["easy-version", "task-system", "intro-visual", "falo-framework"],
+        createdAt: "2026-05-05T21:43:34+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T21:43:34+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/falo-task-system_img_01_easy.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/falo-task-system_img_01_easy.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/falo-task-system_img_01_easy.html",
+        imageFile: "/content/dish-assets/visual-assets/images/falo-task-system-easy-hard/img_01_falo-task-system-easy.png"
+      },
+      {
+        id: "falo-task-system_img_02_hard",
+        role: "hard",
+        status: "mapped",
+        linkedTopic: "falo-task-system-easy-hard",
+        description: "Falo 任務系統的 Hard 版本，用於呈現較完整的系統結構與任務關係。",
+        annotation: "這張圖適合在 Easy 圖之後使用，補足架構細節與可延伸的任務系統關係。",
+        tags: ["hard-version", "task-system", "system-structure", "falo-framework"],
+        createdAt: "2026-05-05T21:43:34+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T21:43:34+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/falo-task-system_img_02_hard.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/falo-task-system_img_02_hard.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/falo-task-system_img_02_hard.html",
+        imageFile: "/content/dish-assets/visual-assets/images/falo-task-system-easy-hard/img_02_falo-task-system-hard.png"
+      },
+      {
+        id: "ai-routing-task-system_img_01_easy",
+        role: "easy",
+        status: "mapped",
+        linkedTopic: "ai-routing-task-system-easy-hard",
+        description: "AI 路由任務系統的 Easy 版本，用於說明 Task Input 如何進入 Prompt Workbench，並路由到合適模型與工具後落地輸出。",
+        annotation: "這張圖適合作為第一層理解入口，先讓讀者看懂任務到 AI 執行的路由流程。",
+        tags: ["easy-version", "ai-routing", "prompt-workbench", "task-flow"],
+        createdAt: "2026-05-05T22:01:46+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T22:01:46+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/ai-routing-task-system_img_01_easy.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/ai-routing-task-system_img_01_easy.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/ai-routing-task-system_img_01_easy.html",
+        imageFile: "/content/dish-assets/visual-assets/images/ai-routing-task-system-easy-hard/img_01_ai-routing-task-system-easy.png"
+      },
+      {
+        id: "ai-routing-task-system_img_02_hard",
+        role: "hard",
+        status: "mapped",
+        linkedTopic: "ai-routing-task-system-easy-hard",
+        description: "AI 路由任務系統的 Hard 版本，用於呈現 AI Task OS 的完整分層架構與任務路由關係。",
+        annotation: "這張圖適合在 Easy 圖之後使用，補足資料來源、任務核心、Prompt 編譯、執行、輸出與稽核記憶層。",
+        tags: ["hard-version", "ai-task-os", "system-structure", "routing-architecture"],
+        createdAt: "2026-05-05T22:01:46+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T22:01:46+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/ai-routing-task-system_img_02_hard.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/ai-routing-task-system_img_02_hard.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/ai-routing-task-system_img_02_hard.html",
+        imageFile: "/content/dish-assets/visual-assets/images/ai-routing-task-system-easy-hard/img_02_ai-routing-task-system-hard.png"
+      },
+      {
+        id: "ai-knight-rider_img_01_easy",
+        role: "easy",
+        status: "mapped",
+        linkedTopic: "ai-knight-rider-easy-hard",
+        description: "AI 霹靂車的 Easy 版本，用於示範人提出策略目標後，AI 如何基於現有資源協助拆解任務並推進行動。",
+        annotation: "這張圖適合作為第一層理解入口，先讓讀者看到 AI 不是亂想，而是依既有資源接住任務。",
+        tags: ["easy-version", "strategy-to-action", "resource-based-planning", "task-decomposition"],
+        createdAt: "2026-05-05T23:23:53+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T23:23:53+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/ai-knight-rider_img_01_easy.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/ai-knight-rider_img_01_easy.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/ai-knight-rider_img_01_easy.html",
+        imageFile: "/content/dish-assets/visual-assets/images/ai-knight-rider-easy-hard/img_01_ai-knight-rider-easy.png"
+      },
+      {
+        id: "ai-knight-rider_img_02_hard",
+        role: "hard",
+        status: "mapped",
+        linkedTopic: "ai-knight-rider-easy-hard",
+        description: "AI 霹靂車的 Hard 版本，用於保存策略目標、資源盤點、任務拆解、接手推進與記錄學習的完整結構。",
+        annotation: "這張圖適合在 Easy 圖之後使用，補足從策略目標到任務載具的完整系統關係。",
+        tags: ["hard-version", "task-os", "resource-routing", "execution-system"],
+        createdAt: "2026-05-05T23:49:42+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T23:49:42+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/ai-knight-rider_img_02_hard.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/ai-knight-rider_img_02_hard.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/ai-knight-rider_img_02_hard.html",
+        imageFile: "/content/dish-assets/visual-assets/images/ai-knight-rider-easy-hard/img_02_ai-knight-rider-hard.png"
+      },
+      {
+        id: "ai-learn-expert-technique_img_01_easy",
+        role: "easy",
+        status: "mapped",
+        linkedTopic: "ai-learn-expert-technique-easy-hard",
+        description: "透過 AI 學習專家技術的 Easy 版本，用於對比以前靠人寫規則與現在讓 AI 從資料中學習規律。",
+        annotation: "這張圖適合作為第一層理解入口，先讓讀者看到 AI 如何降低領域學習與反向工程門檻。",
+        tags: ["easy-version", "ai-learning", "rule-based-comparison", "domain-learning"],
+        createdAt: "2026-05-05T23:23:53+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T23:23:53+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/ai-learn-expert-technique_img_01_easy.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/ai-learn-expert-technique_img_01_easy.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/ai-learn-expert-technique_img_01_easy.html",
+        imageFile: "/content/dish-assets/visual-assets/images/ai-learn-expert-technique-easy-hard/img_01_ai-learn-expert-technique-easy.png"
+      },
+      {
+        id: "ai-learn-expert-technique_img_02_hard",
+        role: "hard",
+        status: "mapped",
+        linkedTopic: "ai-learn-expert-technique-easy-hard",
+        description: "透過 AI 學習專家技術的 Hard 版本，用於呈現多模態資料收集、AI 學習、模型建立與自動判斷的完整路徑。",
+        annotation: "這張圖適合在 Easy 圖之後使用，補足為什麼從現在開始保存原始多模態資料會對未來 AI 有幫助。",
+        tags: ["hard-version", "multimodal-data", "expert-knowledge", "ai-modeling"],
+        createdAt: "2026-05-05T23:23:53+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-05T23:23:53+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/ai-learn-expert-technique_img_02_hard.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/ai-learn-expert-technique_img_02_hard.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/ai-learn-expert-technique_img_02_hard.html",
+        imageFile: "/content/dish-assets/visual-assets/images/ai-learn-expert-technique-easy-hard/img_02_ai-learn-expert-technique-hard.png"
+      },
+      {
+        id: "ai-visual-argument-market-risk_img_01_source",
+        role: "source",
+        status: "mapped",
+        linkedTopic: "ai-visual-argument-market-risk-sweet-spot",
+        description: "A 在群組貼出的房市文章截圖，作為對話起點與市場現象背景。",
+        annotation: "這張圖不是結論，而是觸發討論的原始材料，提供市場庫存、賣壓與價格現象。",
+        tags: ["source-context", "market-data", "real-estate", "conversation-trigger"],
+        createdAt: "2026-05-06T00:31:52+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T00:31:52+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/ai-visual-argument-market-risk_img_01_source.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/ai-visual-argument-market-risk_img_01_source.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/ai-visual-argument-market-risk_img_01_source.html",
+        imageFile: "/content/dish-assets/visual-assets/images/ai-visual-argument-market-risk-sweet-spot/img_01_source-market-context.jpg"
+      },
+      {
+        id: "ai-visual-argument-market-risk_img_02_argument",
+        role: "ai-visual-argument",
+        status: "mapped",
+        linkedTopic: "ai-visual-argument-market-risk-sweet-spot",
+        description: "B 用 AI 產出的高密度觀點圖，將房市甜蜜點、耐心耗盡與連鎖反應風險結構化表達。",
+        annotation: "這張圖展示 AI 圖不是裝飾，而是把不同判讀壓縮成可溝通的結構化論述。",
+        tags: ["ai-generated-argument", "high-density-infographic", "market-risk", "visual-counterpoint"],
+        createdAt: "2026-05-06T00:31:52+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T00:31:52+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/ai-visual-argument-market-risk_img_02_argument.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/ai-visual-argument-market-risk_img_02_argument.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/ai-visual-argument-market-risk_img_02_argument.html",
+        imageFile: "/content/dish-assets/visual-assets/images/ai-visual-argument-market-risk-sweet-spot/img_02_ai-visual-argument.jpg"
+      },
+      {
+        id: "sampuru-demo-track_img_01_business-card-crm-bi",
+        role: "detail",
+        status: "mapped",
+        linkedTopic: "sampuru-demo-implementation-track",
+        description: "名片到 CRM 再到 BI 的完整商業閉環示意，呈現輸入、OCR、資料結構化、CRM 寫入、BI 分析與決策。",
+        annotation: "這張圖適合作為 Sampuru 標準入門案例，讓非技術客戶理解一張名片如何變成可分析的商業資料。",
+        tags: ["business-card", "crm", "bi-dashboard", "etl-flow", "entry-demo"],
+        createdAt: "2026-05-06T01:13:19+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T01:13:19+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/sampuru-demo-track_img_01_business-card-crm-bi.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/sampuru-demo-track_img_01_business-card-crm-bi.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/sampuru-demo-track_img_01_business-card-crm-bi.html",
+        imageFile: "/content/dish-assets/visual-assets/images/sampuru-demo-implementation-track/img_01_business-card-crm-bi-flow.png"
+      },
+      {
+        id: "sampuru-demo-track_img_02_overview",
+        role: "overview",
+        status: "mapped",
+        linkedTopic: "sampuru-demo-implementation-track",
+        description: "Sampuru 實作示範線總覽，上半部是名片 CRM BI 入門案例，下半部是 Chrome 外掛 Prompt 指令管理進階案例。",
+        annotation: "這張圖適合明天討論 Demo Track 的定位：名片可學可做，Chrome 外掛可理解但偏委託展示。",
+        tags: ["demo-track", "chrome-extension", "prompt-management", "implementation-overview", "advanced-demo"],
+        createdAt: "2026-05-06T01:13:19+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T01:13:19+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/sampuru-demo-track_img_02_overview.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/sampuru-demo-track_img_02_overview.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/sampuru-demo-track_img_02_overview.html",
+        imageFile: "/content/dish-assets/visual-assets/images/sampuru-demo-implementation-track/img_02_demo-track-overview.png"
+      },
+      {
+        id: "sampuru-demo-track_img_03_chrome-extension-prompt-manager",
+        role: "detail",
+        status: "mapped",
+        linkedTopic: "sampuru-demo-implementation-track",
+        description: "Chrome 瀏覽器外掛 Prompt 指令管理的詳細流程圖，呈現使用情境、外掛入口、指令管理、AI 套用、記錄沉澱與跨工具同步延伸。",
+        annotation: "這張圖補足進階案例細節，用來討論 Chrome 外掛如何成為瀏覽器中的 AI 指令中心與知識沉澱入口。",
+        tags: ["chrome-extension", "prompt-management", "context-capture", "ai-tool-integration", "advanced-demo"],
+        createdAt: "2026-05-06T01:15:47+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T01:15:47+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/sampuru-demo-track_img_03_chrome-extension-prompt-manager.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/sampuru-demo-track_img_03_chrome-extension-prompt-manager.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/sampuru-demo-track_img_03_chrome-extension-prompt-manager.html",
+        imageFile: "/content/dish-assets/visual-assets/images/sampuru-demo-implementation-track/img_03_chrome-extension-prompt-manager.jpg"
+      },
+      {
+        id: "voice-workflow_img_01_full-workflow",
+        role: "hard",
+        status: "mapped",
+        linkedTopic: "voice-to-prompt-text-to-voice-workflow",
+        description: "語音小套餐的完整 Voice-to-Prompt 與 Text-to-Voice 工作流，呈現從語音輸入、STT、Prompt Routing、Prompt DB、NotebookLM、AI workflow 到 TTS、MP3、Podcast 與 CRM 語音回覆的完整路徑。",
+        annotation: "這張圖作為完整版本，用來討論語音小套餐如何連接 ETL、Prompt Library、Universal Tool Layer 與 HITL。",
+        tags: ["voice-workflow", "stt", "tts", "prompt-routing", "audio-etl"],
+        createdAt: "2026-05-06T14:32:30+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T14:32:30+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/voice-workflow_img_01_full-workflow.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/voice-workflow_img_01_full-workflow.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/voice-workflow_img_01_full-workflow.html",
+        imageFile: "/content/dish-assets/visual-assets/images/voice-to-prompt-text-to-voice-workflow/img_01_full-workflow.png"
+      },
+      {
+        id: "voice-workflow_img_02_simple-flow",
+        role: "easy",
+        status: "mapped",
+        linkedTopic: "voice-to-prompt-text-to-voice-workflow",
+        description: "語音小套餐的超簡單流程圖，讓初學者理解如何把語音想法轉成文字、整理語意、選擇 Prompt，最後產生可直接使用的指令。",
+        annotation: "這張圖作為入門版本，用來降低理解門檻，適合在教學或簡報前段先建立直覺。",
+        tags: ["voice-to-prompt", "beginner-flow", "prompt-template", "ai-assist"],
+        createdAt: "2026-05-06T14:32:26+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T14:32:26+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/voice-workflow_img_02_simple-flow.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/voice-workflow_img_02_simple-flow.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/voice-workflow_img_02_simple-flow.html",
+        imageFile: "/content/dish-assets/visual-assets/images/voice-to-prompt-text-to-voice-workflow/img_02_simple-flow.png"
+      },
+      {
+        id: "etl-composable-system_img_01_full-system",
+        role: "hard",
+        status: "mapped",
+        linkedTopic: "etl-composable-ai-data-flow-system",
+        description: "ETL 模型大餐的完整系統圖，呈現 Extract 多來源資料、Transform AI 料理與處理、Load 到知識、儀表板、商務溝通與內容發布等多種目的地。",
+        annotation: "這張圖作為完整版本，用來建立 Falo Composable ETL 的核心世界觀與工具層結構。",
+        tags: ["etl-system", "extract-transform-load", "ai-data-flow", "toolbox-layer", "hitl"],
+        createdAt: "2026-05-06T20:55:00+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T20:55:00+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/etl-composable-system_img_01_full-system.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/etl-composable-system_img_01_full-system.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/etl-composable-system_img_01_full-system.html",
+        imageFile: "/content/dish-assets/visual-assets/images/etl-composable-ai-data-flow-system/img_01_etl-full-system.png"
+      },
+      {
+        id: "etl-composable-system_img_02_questionnaire-easy-example",
+        role: "easy",
+        status: "mapped",
+        linkedTopic: "etl-composable-ai-data-flow-system",
+        description: "問卷系統小套餐的簡單版，作為 ETL 入門示範，呈現從產生問卷、發布入口、收集資料、AI 分析處理到輸出與回覆的資料流。",
+        annotation: "這張圖作為 ETL 的 easy example，協助非技術使用者理解資料入口、處理層與輸出回覆如何串成最小閉環。",
+        tags: ["etl-example", "questionnaire-system", "google-sheet", "ai-analysis", "beginner-flow"],
+        createdAt: "2026-05-06T20:59:43+08:00",
+        updatedAt: "2026-05-06T21:53:09+08:00",
+        fileMtime: "2026-05-06T20:59:43+08:00",
+        backup: "PNG / true",
+        knowledgeCard: "/content/dish-assets/visual-assets/html/image-knowledge-cards/etl-composable-system_img_02_questionnaire-easy-example.html",
+        knowledgeMarkdown: "/content/dish-assets/visual-assets/markdown/images/etl-composable-system_img_02_questionnaire-easy-example.md",
+        imagePage: "/content/dish-assets/visual-assets/images-html/etl-composable-system_img_02_questionnaire-easy-example.html",
+        imageFile: "/content/dish-assets/visual-assets/images/etl-composable-ai-data-flow-system/img_02_questionnaire-easy-example.png"
+      }
+    ];
+
+    const state = {
+      page: 1,
+      pageSize: 25,
+      search: "",
+      sort: "fileMtime",
+      sortDirection: "desc"
+    };
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function searchableText(image) {
+      return [
+        image.id,
+        image.role,
+        image.status,
+        image.linkedTopic,
+        image.description,
+        image.annotation,
+        (image.tags || []).join(" ")
+      ].join(" ").toLowerCase();
+    }
+
+    function compareText(a, b) {
+      return String(a || "").localeCompare(String(b || ""), "zh-Hant");
+    }
+
+    function compareTime(a, b, fallbackA, fallbackB) {
+      const timeA = Date.parse(a || fallbackA || "") || 0;
+      const timeB = Date.parse(b || fallbackB || "") || 0;
+      return timeA - timeB;
+    }
+
+    function filteredImages() {
+      const keyword = state.search.trim().toLowerCase();
+      if (!keyword) return mappedImages;
+      return mappedImages.filter((image) => searchableText(image).includes(keyword));
+    }
+
+    function orderedImages() {
+      const roleRank = { overview: 0, easy: 1, explain: 2, hard: 3, detail: 4, source: 5 };
+      const sorted = [...filteredImages()].sort((a, b) => {
+        if (state.sort === "createdAt") {
+          return compareTime(a.createdAt, b.createdAt, a.fileMtime, b.fileMtime) || compareText(a.id, b.id);
+        }
+        if (state.sort === "fileMtime") {
+          return compareTime(a.fileMtime, b.fileMtime, a.createdAt, b.createdAt) || compareText(a.id, b.id);
+        }
+        if (state.sort === "updatedAt") {
+          return compareTime(a.updatedAt, b.updatedAt, a.fileMtime, b.fileMtime) || compareText(a.id, b.id);
+        }
+        if (state.sort === "topic") {
+          return compareText(a.linkedTopic, b.linkedTopic) || (roleRank[a.role] ?? 9) - (roleRank[b.role] ?? 9) || compareText(a.id, b.id);
+        }
+        if (state.sort === "role") {
+          return (roleRank[a.role] ?? 9) - (roleRank[b.role] ?? 9) || compareText(a.linkedTopic, b.linkedTopic) || compareText(a.id, b.id);
+        }
+        if (state.sort === "status") {
+          return compareText(a.status, b.status) || compareText(a.linkedTopic, b.linkedTopic) || compareText(a.id, b.id);
+        }
+        if (state.sort === "id") {
+          return compareText(a.id, b.id);
+        }
+        return compareText(a.linkedTopic, b.linkedTopic) || compareText(a.role, b.role) || compareText(a.id, b.id);
+      });
+      return state.sortDirection === "desc" ? sorted.reverse() : sorted;
+    }
+
+    function totalPages() {
+      return Math.max(1, Math.ceil(orderedImages().length / state.pageSize));
+    }
+
+    function renderMappedList() {
+      const tbody = document.getElementById("mapped-images-list");
+      const images = orderedImages();
+      state.page = Math.min(state.page, totalPages());
+      const start = (state.page - 1) * state.pageSize;
+      const visibleImages = images.slice(start, start + state.pageSize);
+      if (!visibleImages.length) {
+        tbody.innerHTML = `<tr><td colspan="8">沒有符合的 mapped images。</td></tr>`;
+      } else {
+        tbody.innerHTML = visibleImages.map((image) => `
+        <tr>
+          <td>
+            <button class="thumb-button" type="button" data-preview-id="${escapeHtml(image.id)}" aria-label="Preview ${escapeHtml(image.id)}">
+              <img src="${escapeHtml(image.imageFile)}" alt="${escapeHtml(image.description)}" loading="lazy">
+            </button>
+          </td>
+          <td>${escapeHtml(image.id)}</td>
+          <td>${escapeHtml(image.role)}</td>
+          <td><span class="status">${escapeHtml(image.status)}</span></td>
+          <td>${escapeHtml(image.linkedTopic)}</td>
+          <td>${escapeHtml(image.description)}</td>
+          <td>${escapeHtml(image.backup)}</td>
+          <td>
+            ${image.knowledgeCard ? `<a href="${escapeHtml(image.knowledgeCard)}" target="_blank" rel="noopener">Knowledge Card</a><br>` : ""}
+            <a href="${escapeHtml(image.imagePage)}" target="_blank" rel="noopener">Image Page</a><br>
+            <a href="${escapeHtml(image.imageFile)}" target="_blank" rel="noopener">Image File</a>
+          </td>
+        </tr>
+      `).join("");
+      }
+
+      const last = Math.min(start + state.pageSize, images.length);
+      document.getElementById("mapped-list-summary").textContent = images.length ? `顯示 ${start + 1}-${last} / ${images.length} 張` : "顯示 0 / 0 張";
+      document.getElementById("mapped-list-page-label").textContent = `Page ${state.page} / ${totalPages()}`;
+      document.getElementById("mapped-list-prev").disabled = state.page <= 1;
+      document.getElementById("mapped-list-next").disabled = state.page >= totalPages();
+      document.getElementById("mapped-list-sort-direction").textContent = state.sortDirection === "asc" ? "升冪" : "降冪";
+      document.getElementById("mapped-list-sort-direction").setAttribute("aria-pressed", state.sortDirection === "desc" ? "true" : "false");
+    }
+
+    function openImagePreview(imageId) {
+      const image = mappedImages.find((item) => item.id === imageId);
+      if (!image) return;
+
+      document.getElementById("image-preview-title").textContent = image.id;
+      document.getElementById("image-preview-subtitle").textContent = `${image.linkedTopic} / ${image.role}`;
+      document.getElementById("image-preview-img").src = image.imageFile;
+      document.getElementById("image-preview-img").alt = image.description;
+      document.getElementById("image-preview-description").textContent = image.description;
+      document.getElementById("image-preview-knowledge").href = image.knowledgeCard || image.imagePage;
+      document.getElementById("image-preview-page").href = image.imagePage;
+      document.getElementById("image-preview-file").href = image.imageFile;
+      document.getElementById("image-preview-modal").classList.add("is-open");
+    }
+
+    function closeImagePreview() {
+      document.getElementById("image-preview-modal").classList.remove("is-open");
+      document.getElementById("image-preview-img").src = "";
+    }
+
+    document.getElementById("mapped-list-page-size").addEventListener("change", (event) => {
+      state.pageSize = Number(event.target.value);
+      state.page = 1;
+      renderMappedList();
+    });
+
+    document.getElementById("mapped-list-search").addEventListener("input", (event) => {
+      state.search = event.target.value;
+      state.page = 1;
+      renderMappedList();
+    });
+
+    document.getElementById("mapped-list-sort").addEventListener("change", (event) => {
+      state.sort = event.target.value;
+      state.page = 1;
+      renderMappedList();
+    });
+
+    document.getElementById("mapped-list-sort-direction").addEventListener("click", () => {
+      state.sortDirection = state.sortDirection === "asc" ? "desc" : "asc";
+      state.page = 1;
+      renderMappedList();
+    });
+
+    document.getElementById("mapped-list-prev").addEventListener("click", () => {
+      state.page = Math.max(1, state.page - 1);
+      renderMappedList();
+    });
+
+    document.getElementById("mapped-list-next").addEventListener("click", () => {
+      state.page = Math.min(totalPages(), state.page + 1);
+      renderMappedList();
+    });
+
+    document.getElementById("mapped-images-list").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-preview-id]");
+      if (button) {
+        openImagePreview(button.dataset.previewId);
+      }
+    });
+
+    document.getElementById("image-preview-close").addEventListener("click", closeImagePreview);
+    document.getElementById("image-preview-modal").addEventListener("click", (event) => {
+      if (event.target.id === "image-preview-modal") {
+        closeImagePreview();
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeImagePreview();
+      }
+    });
+
+    renderMappedList();
+  </script>
+</body>
+</html>

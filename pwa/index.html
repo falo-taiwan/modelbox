@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Falo 完全免費輕量級語音轉文字 PWA</title>
+  <meta name="description" content="Falo 完全免費輕量級語音轉文字 PWA，示範可安裝成本地 App 的 Web Speech API 即時轉錄小工具。">
+  <meta name="author" content="Falo x Force Cheng">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="canonical" href="https://falo-taiwan.github.io/modelbox/pwa/">
+  <style>
+    :root {
+      --bg: #f3fbf9;
+      --panel: #ffffff;
+      --ink: #16302e;
+      --muted: #5d706d;
+      --line: #cfe3df;
+      --teal: #0f766e;
+      --teal-dark: #115e59;
+      --blue: #2563eb;
+      --blue-dark: #1e40af;
+      --soft: #e8f7f4;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, #e8f0ff 0, rgba(232, 240, 255, 0) 300px),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 42px 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.06;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .lead {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .card {
+      margin-top: 20px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 16px 36px rgba(37, 99, 235, 0.1);
+    }
+
+    .tool-card {
+      margin-top: 24px;
+    }
+
+    .toolbar,
+    .lang-row,
+    .install-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button {
+      min-height: 42px;
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--teal);
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .small-button {
+      min-height: 34px;
+      padding: 7px 10px;
+      font-size: 14px;
+    }
+
+    button.blue {
+      background: var(--blue);
+    }
+
+    button.secondary {
+      background: #334155;
+    }
+
+    button.light {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    button.active {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .status {
+      padding: 10px 12px;
+      border: 1px solid #b9d7ff;
+      border-radius: 8px;
+      background: #eff6ff;
+      color: var(--blue-dark);
+      font-weight: 800;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 260px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      resize: vertical;
+      color: var(--ink);
+      font: inherit;
+      font-size: 20px;
+      line-height: 1.65;
+    }
+
+    ol {
+      margin: 10px 0 0;
+      padding-left: 22px;
+      color: var(--muted);
+    }
+
+    .note {
+      color: var(--muted);
+    }
+
+    .footer-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      align-items: center;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-tools a {
+      color: var(--teal-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .mini-status {
+      color: var(--blue-dark);
+      font-weight: 800;
+    }
+
+    .fine-print {
+      width: 100%;
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Falo 完全免費輕量級語音轉文字 PWA</h1>
+    <p class="lead">
+      開啟麥克風，即時轉錄，可清除與複製。這是一個可以安裝成本地 App 的最小語音轉文字工具。
+    </p>
+
+    <section class="card tool-card" aria-label="web speech pwa app">
+      <h2>即時轉錄</h2>
+      <div class="lang-row" id="speechLangGroup" aria-label="speech language">
+        <button class="light active" type="button" data-lang="zh-TW">繁中</button>
+        <button class="light" type="button" data-lang="en-US">English</button>
+        <button class="light" type="button" data-lang="ja-JP">日本語</button>
+      </div>
+      <div class="toolbar">
+        <button id="startSpeech" type="button">開始轉錄</button>
+        <button id="stopSpeech" class="secondary" type="button" disabled>停止</button>
+        <button id="clearSpeech" class="light" type="button">清除</button>
+        <button id="copySpeech" class="light" type="button">複製到剪貼簿</button>
+      </div>
+      <div id="speechStatus" class="status">尚未啟動。請按開始轉錄。</div>
+      <textarea id="speechOutput" placeholder="即時轉錄文字會出現在這裡。"></textarea>
+    </section>
+
+    <footer class="footer-tools" aria-label="secondary information">
+      <button id="installApp" class="blue small-button" type="button" disabled>安裝此 PWA</button>
+      <span id="installStatus" class="mini-status">等待安裝提示。</span>
+      <a href="../" target="_blank" rel="noopener">主頁</a>
+      <a href="deployment-note.html" target="_blank" rel="noopener">PWA 說明</a>
+      <span>聯繫方式：private in original source</span>
+      <span>contact removed in public edition</span>
+      <p class="fine-print">Falo x Force Cheng｜2026/5/6｜PWA Lite demo</p>
+    </footer>
+  </main>
+
+  <script>
+    const SpeechRecognitionApi = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const startSpeech = document.querySelector("#startSpeech");
+    const stopSpeech = document.querySelector("#stopSpeech");
+    const clearSpeech = document.querySelector("#clearSpeech");
+    const copySpeech = document.querySelector("#copySpeech");
+    const speechOutput = document.querySelector("#speechOutput");
+    const speechStatus = document.querySelector("#speechStatus");
+    const speechLangGroup = document.querySelector("#speechLangGroup");
+    const installApp = document.querySelector("#installApp");
+    const installStatus = document.querySelector("#installStatus");
+
+    let speechRecognition = null;
+    let speechLang = "zh-TW";
+    let finalTranscript = "";
+    let installPromptEvent = null;
+
+    function setSpeechStatus(message) {
+      speechStatus.textContent = message;
+    }
+
+    function setListening(isListening) {
+      startSpeech.disabled = isListening;
+      stopSpeech.disabled = !isListening;
+    }
+
+    function createRecognition() {
+      if (!SpeechRecognitionApi) {
+        setSpeechStatus("此瀏覽器未提供 Web Speech API。建議用 Chrome 或 Edge 測試。");
+        startSpeech.disabled = true;
+        return null;
+      }
+
+      const recognition = new SpeechRecognitionApi();
+      recognition.lang = speechLang;
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        setListening(true);
+        setSpeechStatus(`正在聽寫：${speechLang}`);
+      };
+
+      recognition.onresult = (event) => {
+        let interimTranscript = "";
+        for (let index = event.resultIndex; index < event.results.length; index += 1) {
+          const text = event.results[index][0].transcript;
+          if (event.results[index].isFinal) {
+            finalTranscript += `${text.trim()}\n`;
+          } else {
+            interimTranscript += text;
+          }
+        }
+        speechOutput.value = `${finalTranscript}${interimTranscript}`.trimStart();
+      };
+
+      recognition.onerror = (event) => {
+        setSpeechStatus(`轉錄狀態：${event.error || "unknown error"}`);
+      };
+
+      recognition.onend = () => {
+        setListening(false);
+        setSpeechStatus("已停止轉錄。");
+      };
+
+      return recognition;
+    }
+
+    speechLangGroup.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-lang]");
+      if (!button) return;
+      speechLang = button.dataset.lang;
+      speechLangGroup.querySelectorAll("[data-lang]").forEach((item) => {
+        item.classList.toggle("active", item === button);
+      });
+      if (speechRecognition) {
+        speechRecognition.stop();
+        speechRecognition = null;
+      }
+      setSpeechStatus(`語言已切換：${speechLang}`);
+    });
+
+    startSpeech.addEventListener("click", () => {
+      speechRecognition = createRecognition();
+      if (!speechRecognition) return;
+      try {
+        speechRecognition.start();
+      } catch (error) {
+        setSpeechStatus(`無法開始轉錄：${error.message}`);
+      }
+    });
+
+    stopSpeech.addEventListener("click", () => {
+      if (speechRecognition) speechRecognition.stop();
+    });
+
+    clearSpeech.addEventListener("click", () => {
+      finalTranscript = "";
+      speechOutput.value = "";
+      setSpeechStatus("已清除文字。");
+    });
+
+    copySpeech.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(speechOutput.value);
+        setSpeechStatus("已複製到剪貼簿。");
+      } catch (error) {
+        speechOutput.select();
+        document.execCommand("copy");
+        setSpeechStatus("已嘗試複製到剪貼簿。");
+      }
+    });
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      installPromptEvent = event;
+      installApp.disabled = false;
+      installStatus.textContent = "可以安裝成 PWA。";
+    });
+
+    installApp.addEventListener("click", async () => {
+      if (!installPromptEvent) {
+        installStatus.textContent = "目前瀏覽器尚未提供安裝提示，可從網址列或選單安裝。";
+        return;
+      }
+      installPromptEvent.prompt();
+      const choice = await installPromptEvent.userChoice;
+      installStatus.textContent = choice.outcome === "accepted" ? "已送出安裝。" : "已取消安裝。";
+      installPromptEvent = null;
+      installApp.disabled = true;
+    });
+
+    window.addEventListener("appinstalled", () => {
+      installStatus.textContent = "PWA 已安裝。";
+      installApp.disabled = true;
+    });
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").then(() => {
+        if (!installPromptEvent) installStatus.textContent = "PWA 快取已啟用。若未出現安裝按鈕，請用瀏覽器選單安裝。";
+      }).catch((error) => {
+        installStatus.textContent = `Service Worker 註冊失敗：${error.message}`;
+      });
+    } else {
+      installStatus.textContent = "此瀏覽器未支援 Service Worker，無法安裝成標準 PWA。";
+    }
+
+    if (!SpeechRecognitionApi) {
+      setSpeechStatus("此瀏覽器未提供 Web Speech API。建議用 Chrome 或 Edge 測試。");
+      startSpeech.disabled = true;
+    }
+  </script>
+</body>
+</html>
