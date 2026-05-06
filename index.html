@@ -1,453 +1,361 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Falo ModelBox｜ModelBox Browser Workbench</title>
-  <meta name="description" content="Falo x Force Cheng 的 ModelBox GitHub Pages 主頁，內建最小 Web Speech API 即時轉錄展示，並連到完整工作台與專案說明。">
-  <meta name="keywords" content="Falo, Force Cheng, Falo ModelBox, Voice-to-Prompt, Web Speech API, Transformers.js Whisper, Chrome Built-in AI, Ollama, Prompt Template, AI 教學">
-  <meta name="author" content="Falo x Force Cheng">
-  <meta name="creator" content="Force Cheng">
-  <meta name="publisher" content="Falo">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#0f766e">
-  <meta name="geo.region" content="TW">
-  <meta name="geo.placename" content="Taiwan">
-  <meta name="geo.position" content="25.0330;121.5654">
-  <meta name="ICBM" content="25.0330, 121.5654">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Falo ModelBox">
-  <meta property="og:title" content="Falo ModelBox｜ModelBox Browser Workbench">
-  <meta property="og:description" content="ModelBox Workflow MVP：瀏覽器內轉錄、模型暖身、AI 後處理與 Prompt 輸出展示。">
-  <meta property="og:url" content="https://falo-taiwan.github.io/modelbox/">
-  <meta property="og:locale" content="zh_TW">
-  <meta property="article:published_time" content="2026-05-06">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Falo ModelBox｜ModelBox Browser Workbench">
-  <meta name="twitter:description" content="Falo x Force Cheng 的 ModelBox Workflow MVP GitHub Pages 入口。">
-  <link rel="canonical" href="https://falo-taiwan.github.io/modelbox/">
+  <title>FALO Model Dish Registry v0.11</title>
+  <meta name="description" content="FALO Model Dish Registry v0.11，Original-reference Privacy Edition。GitHub-ready 的公開隱私版，新增 PM11 與 IM 系列。">
   <style>
     :root {
-      --bg: #f3fbf9;
-      --panel: #ffffff;
-      --ink: #16302e;
-      --muted: #5d706d;
-      --line: #cfe3df;
-      --teal: #0f766e;
-      --teal-dark: #115e59;
-      --soft: #e8f7f4;
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bg:#f4f7fb;
+      --surface:#ffffff;
+      --soft:#edf3f8;
+      --line:#d6e0e8;
+      --text:#173042;
+      --muted:#5b7183;
+      --brand:#0f6d86;
+      --brand-soft:#dff2f6;
+      --accent:#8a4d0f;
+      --radius:22px;
+      --pill:999px;
+      --max:1200px;
+      --shadow:0 18px 44px rgba(16,42,58,.08);
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing:border-box; }
     body {
-      margin: 0;
+      margin:0;
+      font-family:"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
       background:
-        linear-gradient(180deg, #e9fbf7 0, rgba(233, 251, 247, 0) 320px),
+        radial-gradient(circle at top left, rgba(15,109,134,.10), transparent 24%),
+        radial-gradient(circle at top right, rgba(138,77,15,.08), transparent 22%),
         var(--bg);
-      color: var(--ink);
-      line-height: 1.6;
+      color:var(--text);
+      line-height:1.72;
     }
-
-    main {
-      width: min(980px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 54px 0;
+    h1,h2,h3,p { margin:0; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    .page { width:min(calc(100% - 24px), var(--max)); margin:0 auto; padding:24px 0 48px; }
+    .hero,.panel {
+      background:rgba(255,255,255,.96);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
     }
-
+    .hero { padding:28px; }
     .eyebrow {
-      margin: 0 0 8px;
-      color: var(--teal-dark);
-      font-size: 14px;
-      font-weight: 800;
+      display:inline-flex;
+      padding:7px 12px;
+      border-radius:var(--pill);
+      background:var(--brand-soft);
+      color:var(--brand);
+      font-weight:700;
+      font-size:.92rem;
     }
-
     h1 {
-      margin: 0;
-      max-width: 820px;
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 1.05;
-      letter-spacing: 0;
+      margin-top:18px;
+      font-size:clamp(2rem,4vw,3.4rem);
+      line-height:1.12;
     }
-
-    .lead {
-      max-width: 820px;
-      color: var(--muted);
-      font-size: 18px;
+    .hero p { margin-top:12px; max-width:900px; color:var(--muted); }
+    .meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-top:20px; }
+    .meta div { background:var(--soft); padding:14px 16px; border-radius:16px; font-weight:600; }
+    .tabs { margin-top:22px; }
+    .tabs input { display:none; }
+    .tab-labels { display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:10px; }
+    .tab-labels label {
+      padding:12px 14px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      cursor:pointer;
+      text-align:center;
+      font-weight:700;
     }
-
+    .tab-content { display:none; margin-top:18px; }
+    #tab-overview:checked ~ .tab-panels .panel-overview,
+    #tab-upgrade:checked ~ .tab-panels .panel-upgrade,
+    #tab-history:checked ~ .tab-panels .panel-history,
+    #tab-pm11:checked ~ .tab-panels .panel-pm11,
+    #tab-im-system:checked ~ .tab-panels .panel-im-system,
+    #tab-im-modules:checked ~ .tab-panels .panel-im-modules,
+    #tab-privacy:checked ~ .tab-panels .panel-privacy,
+    #tab-evidence:checked ~ .tab-panels .panel-evidence,
+    #tab-affected:checked ~ .tab-panels .panel-affected { display:block; }
+    #tab-overview:checked ~ .tab-labels label[for="tab-overview"],
+    #tab-upgrade:checked ~ .tab-labels label[for="tab-upgrade"],
+    #tab-history:checked ~ .tab-labels label[for="tab-history"],
+    #tab-pm11:checked ~ .tab-labels label[for="tab-pm11"],
+    #tab-im-system:checked ~ .tab-labels label[for="tab-im-system"],
+    #tab-im-modules:checked ~ .tab-labels label[for="tab-im-modules"],
+    #tab-privacy:checked ~ .tab-labels label[for="tab-privacy"],
+    #tab-evidence:checked ~ .tab-labels label[for="tab-evidence"],
+    #tab-affected:checked ~ .tab-labels label[for="tab-affected"] {
+      background:var(--brand-soft);
+      color:var(--brand);
+      border-color:rgba(15,109,134,.25);
+    }
+    .panel { padding:24px; margin-top:22px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
     .card {
-      margin-top: 24px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 16px 36px rgba(15, 118, 110, 0.11);
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(242,247,251,.98));
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
     }
-
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .link-group {
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-    }
-
-    .link-group h2 {
-      margin: 0 0 6px;
-      font-size: 20px;
-      line-height: 1.25;
-    }
-
-    .link-group p {
-      margin: 0 0 12px;
-      color: var(--muted);
-    }
-
-    .link-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .link-group.pwa-group {
-      border-color: #bdd3ff;
-      background: #eff6ff;
-    }
-
-    .link-group.workbench-group {
-      border-color: #bfe4df;
-      background: #ecfdf8;
-    }
-
-    a.button {
-      display: inline-flex;
-      align-items: center;
-      min-height: 42px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      background: var(--teal);
-      color: #fff;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    a.button.secondary {
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--ink);
-    }
-
-    a.button.pwa {
-      background: #2563eb;
-    }
-
-    a.button.workbench {
-      background: var(--teal);
-    }
-
-    button {
-      min-height: 42px;
-      padding: 10px 14px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--teal);
-      color: #fff;
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    button.secondary {
-      background: #334155;
-    }
-
-    button.light {
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--ink);
-    }
-
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.55;
-    }
-
-    .speech-demo {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .lang-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .lang-row button.active {
-      background: var(--teal-dark);
-      color: #fff;
-    }
-
-    .status {
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--soft);
-      color: var(--teal-dark);
-      font-weight: 700;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 220px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      resize: vertical;
-      color: var(--ink);
-      font: inherit;
-      font-size: 18px;
-      line-height: 1.65;
-    }
-
-    dl {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 8px 14px;
-      margin: 0;
-    }
-
-    dt {
-      color: var(--teal-dark);
-      font-weight: 800;
-    }
-
-    dd {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    @media (max-width: 640px) {
-      dl {
-        grid-template-columns: 1fr;
-      }
-
-      .actions {
-        grid-template-columns: 1fr;
-      }
-
-      a.button {
-        width: 100%;
-        justify-content: center;
-      }
-
-      button {
-        width: 100%;
-      }
+    .card strong { display:block; font-size:1.04rem; }
+    .card p { margin-top:10px; color:var(--muted); }
+    .list { margin:0; padding-left:1.2rem; color:var(--muted); }
+    .list li + li { margin-top:8px; }
+    .table-wrap { overflow-x:auto; margin-top:16px; }
+    table { width:100%; border-collapse:collapse; min-width:720px; }
+    th,td { padding:12px 14px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { background:var(--soft); font-size:.95rem; }
+    .footer { margin-top:24px; color:var(--muted); padding:0 4px; }
+    .note { margin-top:14px; padding:14px 16px; border-radius:16px; background:rgba(223,242,246,.7); border:1px solid rgba(15,109,134,.16); color:var(--text); }
+    @media (max-width:720px) {
+      .page { width:min(calc(100% - 16px), var(--max)); }
+      .hero,.panel { padding:20px; border-radius:20px; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <p class="eyebrow">Falo x Force Cheng｜2026/5/6｜GitHub Pages Test Entry</p>
-    <h1>ModelBox Browser Workbench</h1>
-    <p class="lead">
-      這是 Falo ModelBox 的教學型 MVP 入口。主頁先放最小可用的 Web Speech API 即時轉錄；完整工作台再展示音檔、Whisper、AI 後處理與 Prompt Template。
-    </p>
-
-    <section class="card speech-demo" aria-label="web speech api realtime transcription">
-      <div>
-        <p class="eyebrow">最小展示｜Web Speech API 即時轉錄</p>
-        <h2>對著麥克風說話，文字會即時進入文字框</h2>
-        <p class="lead">Chrome / Edge 支援度較好。這個區塊只示範即時聽寫，不處理上傳音檔。</p>
+  <main class="page">
+    <section class="hero">
+      <span class="eyebrow">Registry Release v0.11</span>
+      <h1>FALO Model Dish Registry</h1>
+      <p>這是一個可放 GitHub 的公開隱私版，保留原版的結構、命名與教學密度，只收斂不必要的私有資訊。這一版同時新增 <code>PM11</code> 與完整 <code>IM</code> 系列，讓 FALO 的顧問、教材與場景系統盤面更完整。</p>
+      <div class="meta">
+        <div>Release Version<br><strong>v0.11</strong></div>
+        <div>Edition<br><strong>Original-reference Privacy Edition</strong></div>
+        <div>Major Additions<br><strong>PM11 + IM01-IM09</strong></div>
+        <div>Signature<br><strong>FALO x Force Cheng 2026/5/6</strong></div>
       </div>
-      <div class="lang-row" id="speechLangGroup" aria-label="speech language">
-        <button class="light active" type="button" data-lang="zh-TW">繁中</button>
-        <button class="light" type="button" data-lang="en-US">English</button>
-        <button class="light" type="button" data-lang="ja-JP">日本語</button>
-      </div>
-      <div class="toolbar">
-        <button id="startSpeech" type="button">開始轉錄</button>
-        <button id="stopSpeech" class="secondary" type="button" disabled>停止</button>
-        <button id="clearSpeech" class="light" type="button">清除</button>
-        <button id="copySpeech" class="light" type="button">複製到剪貼簿</button>
-      </div>
-      <div id="speechStatus" class="status">尚未啟動。請按開始轉錄。</div>
-      <textarea id="speechOutput" placeholder="即時轉錄文字會出現在這裡。"></textarea>
     </section>
 
-    <div class="actions" aria-label="project entry groups">
-      <section class="link-group pwa-group" aria-label="pwa lite group">
-        <h2>PWA Lite</h2>
-        <p>完全免費、輕量級、可安裝成本地 App 的即時語音轉文字範例。</p>
-        <div class="link-row">
-          <a class="button pwa" href="pwa/" target="_blank" rel="noopener">PWA 範例｜安裝成本地 App</a>
-          <a class="button secondary" href="pwa/deployment-note.html" target="_blank" rel="noopener">PWA 部署案例文件</a>
-        </div>
-      </section>
+    <section class="tabs">
+      <input type="radio" name="tabs" id="tab-overview" checked>
+      <input type="radio" name="tabs" id="tab-upgrade">
+      <input type="radio" name="tabs" id="tab-history">
+      <input type="radio" name="tabs" id="tab-pm11">
+      <input type="radio" name="tabs" id="tab-im-system">
+      <input type="radio" name="tabs" id="tab-im-modules">
+      <input type="radio" name="tabs" id="tab-privacy">
+      <input type="radio" name="tabs" id="tab-evidence">
+      <input type="radio" name="tabs" id="tab-affected">
 
-      <section class="link-group workbench-group" aria-label="voice to prompt workbench group">
-        <h2>ModelBox 工作平台</h2>
-        <p>完整展示轉錄、模型檢測、後處理與 Prompt Template 的教學工作流。</p>
-        <div class="link-row">
-          <a class="button workbench" href="content/dish-assets/html/voice-to-prompt-mvp.html" target="_blank" rel="noopener">開啟 ModelBox MVP</a>
-          <a class="button secondary" href="content/dish-assets/html/voice-to-prompt-browser-workbench-note.html" target="_blank" rel="noopener">閱讀專案說明頁</a>
-        </div>
-      </section>
-    </div>
+      <div class="tab-labels">
+        <label for="tab-overview">Overview</label>
+        <label for="tab-upgrade">Upgrade Notes</label>
+        <label for="tab-history">Version History</label>
+        <label for="tab-pm11">PM11 Delivery</label>
+        <label for="tab-im-system">IM System</label>
+        <label for="tab-im-modules">IM Modules</label>
+        <label for="tab-privacy">Privacy Edition</label>
+        <label for="tab-evidence">Evidence</label>
+        <label for="tab-affected">Affected Entries</label>
+      </div>
 
-    <section class="card">
-      <dl>
-        <dt>Project</dt>
-        <dd>Falo ModelBox</dd>
-        <dt>Demo</dt>
-        <dd>ModelBox Browser Workbench</dd>
-        <dt>Version</dt>
-        <dd>v102 (v1.02)</dd>
-        <dt>Author</dt>
-        <dd>Force Cheng</dd>
-        <dt>Brand</dt>
-        <dd>Falo</dd>
-        <dt>Date</dt>
-        <dd>2026/5/6</dd>
-        <dt>Region</dt>
-        <dd>Taiwan / zh-Hant</dd>
-      </dl>
+      <div class="tab-panels">
+        <section class="panel tab-content panel-overview">
+          <h2>版本定位</h2>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card">
+              <strong>這不是重寫版</strong>
+              <p>v0.11 高度參考原版內容與結構，保留 FALO Registry 的原始敘事與教學密度。</p>
+            </article>
+            <article class="card">
+              <strong>這是公開隱私版</strong>
+              <p>主要收斂的是本機絕對路徑、私有執行痕跡與不必要的環境識別資訊。</p>
+            </article>
+            <article class="card">
+              <strong>新增主軸</strong>
+              <p>這次把 AI 交付橋接能力收成 <code>PM11</code>，並將 <code>local-first-im</code> 正式升級成完整 <code>IM</code> 系列。</p>
+            </article>
+            <article class="card">
+              <strong>Catalog Layer 邊界</strong>
+              <p>這仍然是外部索引、展示與教材整理層，不是 ModelBox 內部 relation graph 或系統實作規格。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel tab-content panel-upgrade">
+          <h2>v0.11 升版重點</h2>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card">
+              <strong>新增 PM11</strong>
+              <p>把 <code>MCP / SSH / GitHub push</code> 橋接能力整理成 FALO 可提供的顧問服務、教材模組與元件型模型菜。</p>
+            </article>
+            <article class="card">
+              <strong>新增 IM 系列</strong>
+              <p>將 <code>local-first-im</code> 納入為一條完整系統線，並更明確收斂成 <code>Local-first IM Workbench</code> 的主系統定位。</p>
+            </article>
+            <article class="card">
+              <strong>補概念條目</strong>
+              <p>新增 <code>CC25</code> 與 <code>CC26</code>，分別承接 AI 交付橋接與 Local-first 協作邊界。</p>
+            </article>
+            <article class="card">
+              <strong>公開版邊界</strong>
+              <p>保留原版內容密度與版本脈絡，但將公開版改寫成 GitHub 可直接展示的隱私版。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel tab-content panel-history">
+          <h2>已知升版歷程</h2>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card"><strong>v0.01</strong><p>建立 Catalog Layer 基礎版本，整理 MM、BB、NewsOps 三大來源，並用 System / Module / Dish 做第一輪清單化。</p></article>
+            <article class="card"><strong>v0.07</strong><p>把母表正式化成 Excel / Markdown / HTML，統一 AA、BB、MM、CC、MMM、NewsOps 的 registry 欄位與展示格式。</p></article>
+            <article class="card"><strong>v0.08</strong><p>將 FALO 從模型菜集合升級成 AI Task OS 導向，加入雙 NotebookLM、Skill-first、Primary / Alternative、PM / FS 主軸。</p></article>
+            <article class="card"><strong>v0.09b</strong><p>將教材頁納入 patch，新增 TEACH 系列與 PM / CC 的教學映射。</p></article>
+            <article class="card"><strong>v0.09c</strong><p>新增 ASSET 系列，將 Sampuru AI Solution Map 登錄為 Visual Asset / AI Solution Map 型模型菜。</p></article>
+            <article class="card"><strong>v0.10</strong><p>以 <code>v0.09c</code> 為基底整理發佈版，建立備份與對外交付版本，並持續收納新候選條目。</p></article>
+            <article class="card"><strong>v0.11</strong><p>推出高度參考原版的 GitHub-ready 隱私版，新增 <code>PM11</code>、完整 <code>IM</code> 系列與公開版隱私邊界。</p></article>
+          </div>
+        </section>
+
+        <section class="panel tab-content panel-pm11">
+          <h2>PM11｜AI Delivery Bridge</h2>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card">
+              <strong>一句話定位</strong>
+              <p>讓 FALO 能透過 <code>MCP</code>、<code>SSH</code> 與 <code>GitHub push</code>，把對話式 AI 任務橋接到真實工作環境與交付流程。</p>
+            </article>
+            <article class="card">
+              <strong>適用環境</strong>
+              <p><code>ChatGPT Codex</code>、<code>Claude Cowork</code>，以及後續可擴充的對話式 AI 執行環境。</p>
+            </article>
+            <article class="card">
+              <strong>服務定位</strong>
+              <p>這條模型菜可以同時對應顧問服務、教材模組與可組件化的橋接能力。</p>
+            </article>
+            <article class="card">
+              <strong>重要邊界</strong>
+              <p>重點不是工具綁定，而是 AI 如何從對話走到交付。</p>
+            </article>
+          </div>
+          <div class="note">FALO 在這裡扮演的是「橋接層」：幫使用者把任務、規則、工具存取與交付動作連起來，而不是只停在對話或提示詞。</div>
+        </section>
+
+        <section class="panel tab-content panel-im-system">
+          <h2>IM01｜Local-first IM Workbench</h2>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card">
+              <strong>主系統定位</strong>
+              <p>把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。</p>
+            </article>
+            <article class="card">
+              <strong>教學價值</strong>
+              <p>初學者可以透過這條線看懂 Browser Client、Local Server、Identity、Message Routing 與本地紀錄的關係。</p>
+            </article>
+            <article class="card">
+              <strong>顧問價值</strong>
+              <p>這不是單一聊天室功能，而是一個可拆元件、可治理、可延後上雲的場景型系統。</p>
+            </article>
+            <article class="card">
+              <strong>核心邊界</strong>
+              <p><code>Local-first IM: 地端即時，雲端延遲保存。</code></p>
+            </article>
+          </div>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card">
+              <strong>Dev 版</strong>
+              <p><code>static/index.html</code> 是 Local-first IM Dev 實作介面版，偏操作、測試、稽核與多人 / 多 client 驗證。</p>
+            </article>
+            <article class="card">
+              <strong>Overview 版</strong>
+              <p><code>docs/external-overview.html</code> 是外部說明版，偏非工程讀者、教學展示與系統定位說明。</p>
+            </article>
+            <article class="card">
+              <strong>關聯主題</strong>
+              <p>Communication OS、Prompt Manager、Local Data Hub、GAS Sync、AI Logging Shell、HITL。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel tab-content panel-im-modules">
+          <h2>IM 系列子元件</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>名稱</th>
+                  <th>類型</th>
+                  <th>一句話用途</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><code>IM02</code></td><td>Local-first IM Dev Client</td><td>Module</td><td>Local-first IM Dev 實作介面版，用來測試多人、多 client、AI 角色、Prompt 管理、資料閉環與延遲同步。</td></tr>
+                <tr><td><code>IM03</code></td><td>Local IM Server</td><td>Module</td><td>作為地端中樞，負責接收 client 連線、管理在線狀態、轉送訊息並立即寫入本地紀錄。</td></tr>
+                <tr><td><code>IM04</code></td><td>Identity Module</td><td>Module</td><td>把 <code>user_id</code>、<code>client_id</code> 與 session trace 分開管理，讓身份、登入入口與稽核線索可以被清楚教學與追蹤。</td></tr>
+                <tr><td><code>IM05</code></td><td>Message Router</td><td>Module</td><td>判斷訊息是 room message 還是 direct message，並把它送到對應的 client 或 room 成員。</td></tr>
+                <tr><td><code>IM06</code></td><td>Local Message Log</td><td>Module</td><td>把本地訊息紀錄作為第一真實來源，支援後續查詢、匯出與未來批量同步。</td></tr>
+                <tr><td><code>IM07</code></td><td>Admin View / Admin API</td><td>Module</td><td>提供開發測試 / 稽核視角，讓使用者能查看在線狀態、全域紀錄、連線資訊、IP / session / room 狀態與備份資訊。</td></tr>
+                <tr><td><code>IM08</code></td><td>Personal Prompt Manager</td><td>Module</td><td>把 Prompt 新增、分類、搜尋、匯入匯出與帶入聊天室整合在個人 Prompt 管理器中。</td></tr>
+                <tr><td><code>IM09</code></td><td>Backup Sync Queue</td><td>Module</td><td>把 JSON / Excel 匯出匯入、本機回灌、GAS Lite 部署包與 Google Sheet 延遲同步整理成資料閉環隊列。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">這條 Workbench 的核心能力可概括為六組：IM / Room / Direct Message、通訊錄與備註、Prompt 管理器、資料閉環、GAS Lite / Google Sheet 備份，以及開發測試 / 稽核視角。</div>
+        </section>
+
+        <section class="panel tab-content panel-privacy">
+          <h2>Original-reference Privacy Edition</h2>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card">
+              <strong>保留的東西</strong>
+              <p>模型菜命名、系列分類、升版脈絡、教學 / 顧問 / 展示密度、以及與原版對齊的閱讀結構。</p>
+            </article>
+            <article class="card">
+              <strong>收掉的東西</strong>
+              <p>本機絕對路徑、過細的私有執行痕跡、不必要的環境識別資訊，以及不適合直接公開的敏感細節。</p>
+            </article>
+            <article class="card">
+              <strong>不是去版權版</strong>
+              <p>這版不把原版內容洗掉，而是保留原版精神與脈絡，只做公開前的隱私整理。</p>
+            </article>
+            <article class="card">
+              <strong>GitHub-ready</strong>
+              <p>公開頁面改用 repo 相對來源與公開敘事，避免把私有環境資訊直接搬上 GitHub。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel tab-content panel-evidence">
+          <h2>證據與來源</h2>
+          <ul class="list" style="margin-top:12px;">
+            <li><code>docs/mvp/local-first-im-browser-mvp.md</code></li>
+            <li><code>apps/local-first-im/README.md</code></li>
+            <li><code>apps/local-first-im/VERSION.md</code></li>
+            <li><code>apps/local-first-im/static/index.html</code></li>
+            <li><code>apps/local-first-im/docs/external-overview.html</code></li>
+            <li><code>apps/local-first-im/server.py</code></li>
+            <li><code>apps/local-first-im/run_local_im.command</code></li>
+            <li><code>docs/catalog/falo-model-dish-registry-v0.10.md</code></li>
+            <li><code>docs/catalog/falo-model-dish-registry-v0.10.html</code></li>
+            <li><code>docs/catalog/FALO_Model_Dish_Registry_v0.10.xlsx</code></li>
+          </ul>
+          <div class="note">公開版只保留 repo 相對路徑與必要證據脈絡，不直接公開本機絕對路徑與不必要的私有環境資訊。</div>
+        </section>
+
+        <section class="panel tab-content panel-affected">
+          <h2>受影響條目</h2>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card"><strong>PM11 · AI Delivery Bridge</strong><p>Model Dish Candidate</p><p>以 MCP、SSH 與 GitHub push 為橋接能力，把 AI 任務帶到真實交付流程。</p></article>
+            <article class="card"><strong>IM01 · Local-first IM System</strong><p>MVP usable</p><p>地端即時、雲端延遲保存的 Browser IM 主系統。</p></article>
+            <article class="card"><strong>IM02-IM09</strong><p>MVP usable</p><p>從 Browser Client、Local Server、Identity、Router、Log、Admin、Prompt 到 Backup 的完整子元件群。</p></article>
+            <article class="card"><strong>CC25 · AI to Delivery Bridge</strong><p>Working Draft</p><p>AI 不只回答，還要能橋接到真實交付流程與工作環境。</p></article>
+            <article class="card"><strong>CC26 · Local-first Collaboration with Delayed Cloud Sync</strong><p>Working Draft</p><p>地端即時協作、雲端延遲保存，是一種可教學、可治理的系統邊界。</p></article>
+          </div>
+        </section>
+      </div>
     </section>
+
+    <footer class="footer">
+      <p>FALO x Force Cheng 2026/5/6</p>
+      <p>Release v0.11 · Original-reference Privacy Edition</p>
+      <p>Last Updated 2026-05-06 23:05:00 Asia/Taipei</p>
+    </footer>
   </main>
-
-  <script>
-    const SpeechRecognitionApi = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const startSpeech = document.querySelector("#startSpeech");
-    const stopSpeech = document.querySelector("#stopSpeech");
-    const clearSpeech = document.querySelector("#clearSpeech");
-    const copySpeech = document.querySelector("#copySpeech");
-    const speechOutput = document.querySelector("#speechOutput");
-    const speechStatus = document.querySelector("#speechStatus");
-    const speechLangGroup = document.querySelector("#speechLangGroup");
-
-    let speechRecognition = null;
-    let speechLang = "zh-TW";
-    let finalTranscript = "";
-
-    function setSpeechStatus(message) {
-      speechStatus.textContent = message;
-    }
-
-    function setListening(isListening) {
-      startSpeech.disabled = isListening;
-      stopSpeech.disabled = !isListening;
-    }
-
-    function createRecognition() {
-      if (!SpeechRecognitionApi) {
-        setSpeechStatus("此瀏覽器未提供 Web Speech API。建議用 Chrome 或 Edge 測試。");
-        startSpeech.disabled = true;
-        return null;
-      }
-
-      const recognition = new SpeechRecognitionApi();
-      recognition.lang = speechLang;
-      recognition.continuous = true;
-      recognition.interimResults = true;
-
-      recognition.onstart = () => {
-        setListening(true);
-        setSpeechStatus(`正在聽寫：${speechLang}`);
-      };
-
-      recognition.onresult = (event) => {
-        let interimTranscript = "";
-        for (let index = event.resultIndex; index < event.results.length; index += 1) {
-          const text = event.results[index][0].transcript;
-          if (event.results[index].isFinal) {
-            finalTranscript += `${text.trim()}\n`;
-          } else {
-            interimTranscript += text;
-          }
-        }
-        speechOutput.value = `${finalTranscript}${interimTranscript}`.trimStart();
-      };
-
-      recognition.onerror = (event) => {
-        setSpeechStatus(`轉錄狀態：${event.error || "unknown error"}`);
-      };
-
-      recognition.onend = () => {
-        setListening(false);
-        setSpeechStatus("已停止轉錄。");
-      };
-
-      return recognition;
-    }
-
-    speechLangGroup.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-lang]");
-      if (!button) return;
-      speechLang = button.dataset.lang;
-      speechLangGroup.querySelectorAll("[data-lang]").forEach((item) => {
-        item.classList.toggle("active", item === button);
-      });
-      if (speechRecognition) {
-        speechRecognition.stop();
-        speechRecognition = null;
-      }
-      setSpeechStatus(`語言已切換：${speechLang}`);
-    });
-
-    startSpeech.addEventListener("click", () => {
-      speechRecognition = createRecognition();
-      if (!speechRecognition) return;
-      try {
-        speechRecognition.start();
-      } catch (error) {
-        setSpeechStatus(`無法開始轉錄：${error.message}`);
-      }
-    });
-
-    stopSpeech.addEventListener("click", () => {
-      if (speechRecognition) speechRecognition.stop();
-    });
-
-    clearSpeech.addEventListener("click", () => {
-      finalTranscript = "";
-      speechOutput.value = "";
-      setSpeechStatus("已清除文字。");
-    });
-
-    copySpeech.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(speechOutput.value);
-        setSpeechStatus("已複製到剪貼簿。");
-      } catch (error) {
-        speechOutput.select();
-        document.execCommand("copy");
-        setSpeechStatus("已嘗試複製到剪貼簿。");
-      }
-    });
-
-    if (!SpeechRecognitionApi) {
-      setSpeechStatus("此瀏覽器未提供 Web Speech API。建議用 Chrome 或 Edge 測試。");
-      startSpeech.disabled = true;
-    }
-  </script>
 </body>
 </html>

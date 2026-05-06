@@ -4,6 +4,10 @@
 
 這個 repo 是 `falo-taiwan/modelbox` 的 GitHub Pages 公開版本。
 
+它目前的首頁主體是：
+
+- FALO Model Dish Registry / 模型菜清單
+
 它的定位不是把整個本地工作區原封不動搬上來，而是整理成：
 
 - 可直接開站的 `index.html`
@@ -19,20 +23,20 @@
 
 ## 主要內容
 
-### 1. ModelBox Browser Workbench
+### 1. FALO Model Dish Registry
 
-- 主頁入口：[`index.html`](./index.html)
-- PWA Lite：[`pwa/index.html`](./pwa/index.html)
-- PWA 部署說明：[`pwa/deployment-note.html`](./pwa/deployment-note.html)
-- Browser Workbench MVP：[`content/dish-assets/html/voice-to-prompt-mvp.html`](./content/dish-assets/html/voice-to-prompt-mvp.html)
-- Workbench 說明頁：[`content/dish-assets/html/voice-to-prompt-browser-workbench-note.html`](./content/dish-assets/html/voice-to-prompt-browser-workbench-note.html)
-
-### 2. FALO Model Dish Registry
-
+- 根目錄首頁：[`index.html`](./index.html)
 - HTML 展示版：[`docs/catalog/falo-model-dish-registry-v0.11.html`](./docs/catalog/falo-model-dish-registry-v0.11.html)
 - Markdown 版：[`docs/catalog/falo-model-dish-registry-v0.11.md`](./docs/catalog/falo-model-dish-registry-v0.11.md)
 - Excel 母表：[`docs/catalog/FALO_Model_Dish_Registry_v0.11.xlsx`](./docs/catalog/FALO_Model_Dish_Registry_v0.11.xlsx)
 - Catalog 索引：[`docs/catalog/README.md`](./docs/catalog/README.md)
+
+### 2. 補充展示頁
+
+- PWA Lite：[`pwa/index.html`](./pwa/index.html)
+- PWA 部署說明：[`pwa/deployment-note.html`](./pwa/deployment-note.html)
+- Browser Workbench MVP：[`content/dish-assets/html/voice-to-prompt-mvp.html`](./content/dish-assets/html/voice-to-prompt-mvp.html)
+- Workbench 說明頁：[`content/dish-assets/html/voice-to-prompt-browser-workbench-note.html`](./content/dish-assets/html/voice-to-prompt-browser-workbench-note.html)
 
 ## 版本說明
 
@@ -50,6 +54,8 @@
 ## 補充
 
 這個公開 repo 只放適合 GitHub Pages 與公開閱讀的版本。
+
+目前首頁已經調整成「模型菜清單 / registry 展示頁」，不是 `voice-to-prompt` 的專案首頁。
 
 不包含：
 
