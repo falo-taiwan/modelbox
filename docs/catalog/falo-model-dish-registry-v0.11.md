@@ -2,7 +2,7 @@
 
 **Release Version: `v0.11`**  
 **Edition: `公開可讀的詳細版`**  
-Last Updated: `2026-05-06 23:12:12 Asia/Taipei`  
+Last Updated: `2026-05-06 23:18:00 Asia/Taipei`  
 Signature: `FALO x Force Cheng 2026/5/6`
 
 ## 1. 版本定位
@@ -225,7 +225,7 @@ Signature: `FALO x Force Cheng 2026/5/6`
 | `PM` | 7 | FALO 作為 AI Task OS 的主軸系列，承接任務系統、決策與交付橋接。 |
 | `FS` | 0 | Ground Truth 與 Evidence Layer 的保留區，目前欄位已預留，但本版尚未展開具名條目。 |
 | `TEACH` | 3 | 從教材、案例、教學頁映射出的模型菜，負責把概念轉成可教內容。 |
-| `ASSET` | 1 | 展示型、視覺型、語意導航型模型菜資產，偏 showcase 與入口價值。 |
+| `ASSET` | 2 | 展示型、視覺型、語意導航型模型菜資產，偏 showcase、教學入口與外部說明價值。 |
 | `TRACE` | 0 | AI 學習履歷與 GitHub / Pages 資產治理保留區，本版欄位已規劃，後續再補實體條目。 |
 | `NewsOps` | 18 | 專案型系統族群，涵蓋 ETL、監測、編修、輸出與審核的整條運作鏈。 |
 | `IM` | 9 | Local-first IM 與協作工作台系統，承接 communication OS、prompt 管理與資料閉環。 |
@@ -424,12 +424,13 @@ Ground Truth 與 Evidence Layer 的保留區，目前欄位已預留，但本版
 
 ### 11.10 ASSET 系列｜Visual Assets
 
-展示型、視覺型、語意導航型模型菜資產，偏 showcase 與入口價值。
+展示型、視覺型、語意導航型模型菜資產，偏 showcase、教學入口與外部說明價值。
 
 
 | Code | 名稱 | 類型 | 層級 / 家族 | 一句話用途 | 備註 | 狀態 |
 | --- | --- | --- | --- | --- | --- | --- |
 | ASSET01 | Sampuru AI Solution Map | Visual Asset / Model Dish | Visual Navigation / Showcase / Semantic Map | Sampuru AI Solution Map 是一張可互動的 AI Solution 語意地圖，用四個圖像區域呈現 FALO 模型菜與 Visual Asset 的展示型態。 | 這不是資料庫系統，也不是一般網站分類頁。它是 Step 3 的影像式分類地圖 MVP，用來讓使用者透過地圖理解 FALO AI 解決方案分布。 | POC complete / MVP usable |
+| ASSET02 | Local-first IM Workbench Visual Explainer Set | Visual Asset Set / Model Dish | Visual Storytelling / Teaching / System Explainer | 以四張單頁圖解，分別從簡單版、情境版、情境精華版與最複雜版，展示 Local-first IM Workbench 的不同敘事深度與系統切面。 | 這四張是一套，不應拆成四個零散條目。適合用於教學、顧問提案、系統說明與視覺導覽；同時作為 IM01 的外部展示資產。 | POC complete / Teaching-ready |
 
 ### 11.11 TRACE 系列｜AI Learning Trace
 
@@ -472,7 +473,7 @@ Local-first IM 與協作工作台系統，承接 communication OS、prompt 管�
 
 | Code | 名稱 | 類型 | 層級 / 家族 | 一句話用途 | 備註 | 狀態 |
 | --- | --- | --- | --- | --- | --- | --- |
-| IM01 | Local-first IM Workbench | System | Collaboration System | 把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。 | 建議名稱可理解為 Local-first IM Workbench，也可視為 AI Client Communication Workbench。它介於 System / Module 之間，但目前以系統級模型菜原型收錄。Dev 版 index.html 偏實作介面；external-overview.html 偏外部說明版。 | MVP usable |
+| IM01 | Local-first IM Workbench | System | Collaboration System | 把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。 | 建議名稱可理解為 Local-first IM Workbench，也可視為 AI Client Communication Workbench。它介於 System / Module 之間，但目前以系統級模型菜原型收錄。Dev 版 index.html 偏實作介面；external-overview.html 偏外部說明版。 另有一組四張單頁視覺圖解，已收錄為 ASSET02，作為 IM01 的外部展示資產。 | MVP usable |
 | IM02 | Local-first IM Dev Client | Module | Collaboration System | Local-first IM Dev 實作介面版，用來測試多人、多 client、AI 角色、Prompt 管理、資料閉環與延遲同步。 | 這份 index.html 是 Dev 實作介面版，偏操作與測試；external-overview.html 則是對外說明版，偏非工程讀者。 | MVP usable |
 | IM03 | Local IM Server | Module | Collaboration System | 作為地端中樞，負責接收 client 連線、管理在線狀態、轉送訊息並立即寫入本地紀錄。 | 公開版只保留架構角色與能力摘要，不暴露不必要的環境細節。 | MVP usable |
 | IM04 | Identity Module | Module | Collaboration System | 把 user_id、client_id 與 session trace 分開管理，讓身份、登入入口與稽核線索可以被清楚教學與追蹤。 | 第一版重點是教學與稽核，不是複雜權限系統。 | MVP usable |
