@@ -123,10 +123,109 @@
       .page { width:min(calc(100% - 16px), var(--max)); }
       .hero,.panel { padding:20px; border-radius:20px; }
     }
+  
+    .search-shell {
+      position: sticky;
+      top: 12px;
+      z-index: 60;
+      margin: 0 0 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .search-icon {
+      color: var(--brand);
+      font-weight: 700;
+      font-size: 1rem;
+      flex: 0 0 auto;
+    }
+    .search-bar input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+    }
+    .search-bar input::placeholder {
+      color: var(--muted);
+    }
+    .search-bar button {
+      border: 1px solid rgba(15,109,134,.16);
+      background: var(--brand-soft);
+      color: var(--brand);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .search-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 4px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .search-hidden {
+      display: none !important;
+    }
+    .search-highlight {
+      outline: 2px solid rgba(15,109,134,.14);
+      background: rgba(223,242,246,.32) !important;
+      scroll-margin-top: 96px;
+    }
+    body.search-mode .tab-content {
+      display: block !important;
+    }
+    body.search-mode .tab-labels label {
+      opacity: .72;
+    }
+    @media (max-width: 720px) {
+      .search-shell {
+        top: 8px;
+        margin-bottom: 14px;
+      }
+      .search-bar {
+        padding: 10px 12px;
+      }
+      .search-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
   </style>
 </head>
 <body>
   <main class="page">
+
+      <section class="search-shell" data-universal-search>
+        <div class="search-bar">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input type="search" placeholder="搜尋系列、代碼、名稱、用途、備註..." aria-label="萬能關鍵字搜尋">
+          <button type="button" data-search-clear>清除</button>
+        </div>
+        <div class="search-meta">
+          <span data-search-status>顯示全部內容</span>
+          <span>萬能欄位搜尋</span>
+        </div>
+      </section>
+
     <section class="hero">
       <span class="eyebrow">Registry Release v0.11</span>
       <h1>FALO Model Dish Registry</h1>
@@ -377,5 +476,85 @@
       <p>Last Updated 2026-05-06 23:18:00 Asia/Taipei</p>
     </footer>
   </main>
+
+<script>
+(() => {
+  const shell = document.querySelector('[data-universal-search]');
+  if (!shell) return;
+
+  const root = document.querySelector('.page') || document.body;
+  const input = shell.querySelector('input');
+  const clearButton = shell.querySelector('[data-search-clear]');
+  const status = shell.querySelector('[data-search-status]');
+  const itemSelector = 'tbody tr, .entry-card, .card, .rule-card, .relationship, .list li';
+  const detailsSelector = 'details.series-detail';
+  const items = Array.from(root.querySelectorAll(itemSelector)).filter((el) => !shell.contains(el));
+  const details = Array.from(root.querySelectorAll(detailsSelector)).filter((el) => !shell.contains(el));
+  const initialDetailsState = new Map(details.map((el) => [el, el.open]));
+
+  const normalize = (value) => (value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const matches = (el, query) => normalize(el.textContent).includes(query);
+
+  function updateStatus(query, matchedCount) {
+    if (!query) {
+      status.textContent = '顯示全部內容';
+      return;
+    }
+    status.textContent = matchedCount > 0
+      ? `找到 ${matchedCount} 筆符合內容`
+      : `找不到「${input.value.trim()}」相關內容`;
+  }
+
+  function applySearch() {
+    const query = normalize(input.value);
+    const inSearch = Boolean(query);
+    document.body.classList.toggle('search-mode', inSearch);
+
+    let matchedCount = 0;
+    let firstMatch = null;
+
+    items.forEach((el) => {
+      const matched = !inSearch || matches(el, query);
+      el.classList.toggle('search-hidden', !matched);
+      el.classList.toggle('search-highlight', matched && inSearch);
+      if (matched && inSearch) {
+        matchedCount += 1;
+        if (!firstMatch) firstMatch = el;
+      }
+    });
+
+    details.forEach((el) => {
+      if (inSearch) {
+        const detailMatched = matches(el, query) || Array.from(el.querySelectorAll(itemSelector)).some((child) => !child.classList.contains('search-hidden'));
+        el.classList.toggle('search-hidden', !detailMatched);
+        el.open = detailMatched;
+      } else {
+        el.classList.remove('search-hidden');
+        el.open = initialDetailsState.get(el) || false;
+      }
+    });
+
+    updateStatus(query, matchedCount);
+
+  }
+
+  input.addEventListener('input', applySearch);
+  clearButton.addEventListener('click', () => {
+    input.value = '';
+    applySearch();
+    input.focus();
+  });
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      input.value = '';
+      applySearch();
+      input.blur();
+    }
+  });
+
+  applySearch();
+})();
+</script>
+
 </body>
 </html>
