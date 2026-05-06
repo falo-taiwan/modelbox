@@ -1,8 +1,8 @@
 # FALO Model Dish Registry
 
 **Release Version: `v0.11`**  
-**Edition: `Original-reference Privacy Edition`**  
-Last Updated: `2026-05-06 23:35:00 Asia/Taipei`  
+**Edition: `公開可讀的詳細版`**  
+Last Updated: `2026-05-06 22:56:02 Asia/Taipei`  
 Signature: `FALO x Force Cheng 2026/5/6`
 
 ## 1. 版本定位
@@ -18,7 +18,7 @@ Signature: `FALO x Force Cheng 2026/5/6`
 
 一句話：
 
-> `v0.11` 是 FALO Registry 的「原版參考型隱私版」，不是去版權重寫版。
+> `v0.11` 是 FALO Registry 的「公開可讀的詳細版」，不是去版權重寫版。
 
 ## 2. 公開版隱私邊界
 
@@ -76,7 +76,7 @@ Signature: `FALO x Force Cheng 2026/5/6`
 | `v0.09b` | 將教材頁納入 patch，新增 TEACH 系列與 PM / CC 的教學映射。 |
 | `v0.09c` | 新增 ASSET 系列，將 Sampuru AI Solution Map 登錄為 Visual Asset / AI Solution Map 型模型菜。 |
 | `v0.10` | 以 `v0.09c` 為基底整理發佈版，建立備份與對外交付版本，並持續收納新候選條目。 |
-| `v0.11` | 推出高度參考原版的 GitHub-ready 隱私版，新增 `PM11`、`IM` 系列與公開版隱私邊界。 |
+| `v0.11` | 推出高度參考原版的 GitHub-ready 公開可讀詳細版，新增 `PM11`、`IM` 系列與公開版精度邊界。 |
 
 ## 6. PM11｜AI Delivery Bridge
 

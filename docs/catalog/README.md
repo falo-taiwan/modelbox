@@ -16,7 +16,7 @@
 - `FALO_Model_Dish_Registry_v0.11.xlsx`
 - `falo-model-dish-registry-v0.11.md`
 - `falo-model-dish-registry-v0.11.html`
-- 定位：GitHub-ready `Original-reference Privacy Edition`
+- 定位：GitHub-ready `公開可讀的詳細版`
 
 ### v0.10
 
