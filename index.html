@@ -123,7 +123,7 @@
     <section class="hero">
       <span class="eyebrow">Registry Release v0.11</span>
       <h1>FALO Model Dish Registry</h1>
-      <p>這是一個可放 GitHub 的公開隱私版，保留原版的結構、命名與教學密度，只收斂不必要的私有資訊。這一版同時新增 <code>PM11</code> 與完整 <code>IM</code> 系列，讓 FALO 的顧問、教材與場景系統盤面更完整。</p>
+      <p>這是一個可放 GitHub 的公開隱私版，保留原版的結構、命名與教學密度，只收斂不必要的私有資訊。兩種版本都應詳細保留模型菜分類與細節，差別只在公開版的精度控管。這一版同時新增 <code>PM11</code> 與完整 <code>IM</code> 系列，讓 FALO 的顧問、教材與場景系統盤面更完整。</p>
       <div class="meta">
         <div>Release Version<br><strong>v0.11</strong></div>
         <div>Edition<br><strong>Original-reference Privacy Edition</strong></div>
@@ -168,14 +168,15 @@
               <p>主要收斂的是本機絕對路徑、私有執行痕跡與不必要的環境識別資訊。</p>
             </article>
             <article class="card">
+              <strong>不是薄摘要</strong>
+              <p>公開版與個人版都要詳細放進模型菜分類與細節；公開版只降低精度，不降低內容厚度。</p>
+            </article>
+            <article class="card">
               <strong>新增主軸</strong>
               <p>這次把 AI 交付橋接能力收成 <code>PM11</code>，並將 <code>local-first-im</code> 正式升級成完整 <code>IM</code> 系列。</p>
             </article>
-            <article class="card">
-              <strong>Catalog Layer 邊界</strong>
-              <p>這仍然是外部索引、展示與教材整理層，不是 ModelBox 內部 relation graph 或系統實作規格。</p>
-            </article>
           </div>
+          <div class="note">公開版的原則不是把模型菜寫薄，而是維持完整分類、能力拆解、關聯與用途，再把敏感精度降一階。</div>
         </section>
 
         <section class="panel tab-content panel-upgrade">
@@ -196,6 +197,10 @@
             <article class="card">
               <strong>公開版邊界</strong>
               <p>保留原版內容密度與版本脈絡，但將公開版改寫成 GitHub 可直接展示的隱私版。</p>
+            </article>
+            <article class="card">
+              <strong>詳細度原則</strong>
+              <p>不管公開版或個人版，都應把各模型菜分類與細節放進去；公開版只是不放得太精確。</p>
             </article>
           </div>
         </section>
@@ -304,7 +309,7 @@
           <div class="grid" style="margin-top:16px;">
             <article class="card">
               <strong>保留的東西</strong>
-              <p>模型菜命名、系列分類、升版脈絡、教學 / 顧問 / 展示密度、以及與原版對齊的閱讀結構。</p>
+              <p>模型菜命名、系列分類、升版脈絡、教學 / 顧問 / 展示密度、各模型菜的分類細節，以及與原版對齊的閱讀結構。</p>
             </article>
             <article class="card">
               <strong>收掉的東西</strong>
@@ -316,7 +321,7 @@
             </article>
             <article class="card">
               <strong>GitHub-ready</strong>
-              <p>公開頁面改用 repo 相對來源與公開敘事，避免把私有環境資訊直接搬上 GitHub。</p>
+              <p>公開頁面改用 repo 相對來源與公開敘事，保留完整模型菜細節，但避免把私有環境資訊直接搬上 GitHub。</p>
             </article>
           </div>
         </section>
@@ -354,7 +359,7 @@
     <footer class="footer">
       <p>FALO x Force Cheng 2026/5/6</p>
       <p>Release v0.11 · Original-reference Privacy Edition</p>
-      <p>Last Updated 2026-05-06 23:05:00 Asia/Taipei</p>
+      <p>Last Updated 2026-05-06 23:35:00 Asia/Taipei</p>
     </footer>
   </main>
 </body>

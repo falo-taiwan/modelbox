@@ -123,7 +123,7 @@
     <section class="hero">
       <span class="eyebrow">Registry Release v0.11</span>
       <h1>FALO Model Dish Registry</h1>
-      <p>這是一個可放 GitHub 的公開隱私版，保留原版的結構、命名與教學密度，只收斂不必要的私有資訊。這一版同時新增 <code>PM11</code> 與完整 <code>IM</code> 系列，讓 FALO 的顧問、教材與場景系統盤面更完整。</p>
+      <p>這是一個可放 GitHub 的公開隱私版，保留原版的結構、命名與教學密度，只收斂不必要的私有資訊。兩種版本都應詳細保留模型菜分類與細節，差別只在公開版的精度控管。這一版同時新增 <code>PM11</code> 與完整 <code>IM</code> 系列，讓 FALO 的顧問、教材與場景系統盤面更完整。</p>
       <div class="meta">
         <div>Release Version<br><strong>v0.11</strong></div>
         <div>Edition<br><strong>Original-reference Privacy Edition</strong></div>
@@ -168,14 +168,15 @@
               <p>主要收斂的是本機絕對路徑、私有執行痕跡與不必要的環境識別資訊。</p>
             </article>
             <article class="card">
+              <strong>不是薄摘要</strong>
+              <p>公開版與個人版都要詳細放進模型菜分類與細節；公開版只降低精度，不降低內容厚度。</p>
+            </article>
+            <article class="card">
               <strong>新增主軸</strong>
               <p>這次把 AI 交付橋接能力收成 <code>PM11</code>，並將 <code>local-first-im</code> 正式升級成完整 <code>IM</code> 系列。</p>
             </article>
-            <article class="card">
-              <strong>Catalog Layer 邊界</strong>
-              <p>這仍然是外部索引、展示與教材整理層，不是 ModelBox 內部 relation graph 或系統實作規格。</p>
-            </article>
           </div>
+          <div class="note">公開版的原則不是把模型菜寫薄，而是維持完整分類、能力拆解、關聯與用途，再把敏感精度降一階。</div>
         </section>
 
         <section class="panel tab-content panel-upgrade">
@@ -187,7 +188,7 @@
             </article>
             <article class="card">
               <strong>新增 IM 系列</strong>
-              <p>將 <code>local-first-im</code> 納入為一條完整系統線，從主系統一路拆到 Browser、Server、Identity、Log、Backup。</p>
+              <p>將 <code>local-first-im</code> 納入為一條完整系統線，並更明確收斂成 <code>Local-first IM Workbench</code> 的主系統定位。</p>
             </article>
             <article class="card">
               <strong>補概念條目</strong>
@@ -196,6 +197,10 @@
             <article class="card">
               <strong>公開版邊界</strong>
               <p>保留原版內容密度與版本脈絡，但將公開版改寫成 GitHub 可直接展示的隱私版。</p>
+            </article>
+            <article class="card">
+              <strong>詳細度原則</strong>
+              <p>不管公開版或個人版，都應把各模型菜分類與細節放進去；公開版只是不放得太精確。</p>
             </article>
           </div>
         </section>
@@ -237,11 +242,11 @@
         </section>
 
         <section class="panel tab-content panel-im-system">
-          <h2>IM01｜Local-first IM System</h2>
+          <h2>IM01｜Local-first IM Workbench</h2>
           <div class="grid" style="margin-top:16px;">
             <article class="card">
               <strong>主系統定位</strong>
-              <p>以地端即時、雲端延遲保存為核心的 Browser IM 系統，用來教學、測試與展示多 client 協作。</p>
+              <p>把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。</p>
             </article>
             <article class="card">
               <strong>教學價值</strong>
@@ -254,6 +259,20 @@
             <article class="card">
               <strong>核心邊界</strong>
               <p><code>Local-first IM: 地端即時，雲端延遲保存。</code></p>
+            </article>
+          </div>
+          <div class="grid" style="margin-top:16px;">
+            <article class="card">
+              <strong>Dev 版</strong>
+              <p><code>static/index.html</code> 是 Local-first IM Dev 實作介面版，偏操作、測試、稽核與多人 / 多 client 驗證。</p>
+            </article>
+            <article class="card">
+              <strong>Overview 版</strong>
+              <p><code>docs/external-overview.html</code> 是外部說明版，偏非工程讀者、教學展示與系統定位說明。</p>
+            </article>
+            <article class="card">
+              <strong>關聯主題</strong>
+              <p>Communication OS、Prompt Manager、Local Data Hub、GAS Sync、AI Logging Shell、HITL。</p>
             </article>
           </div>
         </section>
@@ -271,17 +290,18 @@
                 </tr>
               </thead>
               <tbody>
-                <tr><td><code>IM02</code></td><td>Browser Client</td><td>Module</td><td>提供人類或 AI 使用的瀏覽器介面，支援匿名進入、登入、room message、direct message 與 prompt 輔助操作。</td></tr>
+                <tr><td><code>IM02</code></td><td>Local-first IM Dev Client</td><td>Module</td><td>Local-first IM Dev 實作介面版，用來測試多人、多 client、AI 角色、Prompt 管理、資料閉環與延遲同步。</td></tr>
                 <tr><td><code>IM03</code></td><td>Local IM Server</td><td>Module</td><td>作為地端中樞，負責接收 client 連線、管理在線狀態、轉送訊息並立即寫入本地紀錄。</td></tr>
                 <tr><td><code>IM04</code></td><td>Identity Module</td><td>Module</td><td>把 <code>user_id</code>、<code>client_id</code> 與 session trace 分開管理，讓身份、登入入口與稽核線索可以被清楚教學與追蹤。</td></tr>
                 <tr><td><code>IM05</code></td><td>Message Router</td><td>Module</td><td>判斷訊息是 room message 還是 direct message，並把它送到對應的 client 或 room 成員。</td></tr>
                 <tr><td><code>IM06</code></td><td>Local Message Log</td><td>Module</td><td>把本地訊息紀錄作為第一真實來源，支援後續查詢、匯出與未來批量同步。</td></tr>
-                <tr><td><code>IM07</code></td><td>Admin View / Admin API</td><td>Module</td><td>提供開發測試階段的管理視角，讓使用者能查看在線狀態、全域紀錄、room 管理與備份資訊。</td></tr>
-                <tr><td><code>IM08</code></td><td>Personal Prompt Manager</td><td>Module</td><td>把個人 prompt 指令庫納入 IM 協作流程，支援儲存、下載、匯入與 trace 保留。</td></tr>
-                <tr><td><code>IM09</code></td><td>Backup Sync Queue</td><td>Module</td><td>把本地資料封裝成可備份、可追蹤、可延後同步到雲端的閉環隊列。</td></tr>
+                <tr><td><code>IM07</code></td><td>Admin View / Admin API</td><td>Module</td><td>提供開發測試 / 稽核視角，讓使用者能查看在線狀態、全域紀錄、連線資訊、IP / session / room 狀態與備份資訊。</td></tr>
+                <tr><td><code>IM08</code></td><td>Personal Prompt Manager</td><td>Module</td><td>把 Prompt 新增、分類、搜尋、匯入匯出與帶入聊天室整合在個人 Prompt 管理器中。</td></tr>
+                <tr><td><code>IM09</code></td><td>Backup Sync Queue</td><td>Module</td><td>把 JSON / Excel 匯出匯入、本機回灌、GAS Lite 部署包與 Google Sheet 延遲同步整理成資料閉環隊列。</td></tr>
               </tbody>
             </table>
           </div>
+          <div class="note">這條 Workbench 的核心能力可概括為六組：IM / Room / Direct Message、通訊錄與備註、Prompt 管理器、資料閉環、GAS Lite / Google Sheet 備份，以及開發測試 / 稽核視角。</div>
         </section>
 
         <section class="panel tab-content panel-privacy">
@@ -289,7 +309,7 @@
           <div class="grid" style="margin-top:16px;">
             <article class="card">
               <strong>保留的東西</strong>
-              <p>模型菜命名、系列分類、升版脈絡、教學 / 顧問 / 展示密度、以及與原版對齊的閱讀結構。</p>
+              <p>模型菜命名、系列分類、升版脈絡、教學 / 顧問 / 展示密度、各模型菜的分類細節，以及與原版對齊的閱讀結構。</p>
             </article>
             <article class="card">
               <strong>收掉的東西</strong>
@@ -301,7 +321,7 @@
             </article>
             <article class="card">
               <strong>GitHub-ready</strong>
-              <p>公開頁面改用 repo 相對來源與公開敘事，避免把私有環境資訊直接搬上 GitHub。</p>
+              <p>公開頁面改用 repo 相對來源與公開敘事，保留完整模型菜細節，但避免把私有環境資訊直接搬上 GitHub。</p>
             </article>
           </div>
         </section>
@@ -312,6 +332,8 @@
             <li><code>docs/mvp/local-first-im-browser-mvp.md</code></li>
             <li><code>apps/local-first-im/README.md</code></li>
             <li><code>apps/local-first-im/VERSION.md</code></li>
+            <li><code>apps/local-first-im/static/index.html</code></li>
+            <li><code>apps/local-first-im/docs/external-overview.html</code></li>
             <li><code>apps/local-first-im/server.py</code></li>
             <li><code>apps/local-first-im/run_local_im.command</code></li>
             <li><code>docs/catalog/falo-model-dish-registry-v0.10.md</code></li>
@@ -337,7 +359,7 @@
     <footer class="footer">
       <p>FALO x Force Cheng 2026/5/6</p>
       <p>Release v0.11 · Original-reference Privacy Edition</p>
-      <p>Last Updated 2026-05-06 21:53:03 Asia/Taipei</p>
+      <p>Last Updated 2026-05-06 23:35:00 Asia/Taipei</p>
     </footer>
   </main>
 </body>

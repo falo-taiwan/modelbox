@@ -2,7 +2,7 @@
 
 **Release Version: `v0.11`**  
 **Edition: `Original-reference Privacy Edition`**  
-Last Updated: `2026-05-06 21:53:03 Asia/Taipei`  
+Last Updated: `2026-05-06 23:35:00 Asia/Taipei`  
 Signature: `FALO x Force Cheng 2026/5/6`
 
 ## 1. 版本定位
@@ -36,7 +36,27 @@ Signature: `FALO x Force Cheng 2026/5/6`
 - 不必要的個人環境識別資訊
 - 不適合直接公開的敏感細節
 
-## 3. v0.11 升版重點
+## 3. 詳細度原則
+
+不管是公開版還是個人版，都應該：
+
+- 詳細保留各個模型菜的分類
+- 詳細保留各個模型菜的用途、能力、模組與關聯
+- 讓讀者能真正看懂盤面，而不是只看到很薄的標題清單
+
+差別不在「內容多不多」，而在「精度控管」：
+
+- `個人版`
+  可以更精確地保留內部脈絡、工作線索、證據層、操作痕跡與細節註記。
+- `公開版`
+  也要保留完整分類與細節，但精度降一階：
+  不放過度精確的敏感參數、私有路徑、環境識別資訊與不適合公開的內部操作細節。
+
+一句話：
+
+> 公開版不是變薄，而是「描述完整、精度較低」。
+
+## 4. v0.11 升版重點
 
 | 升版項目 | 說明 |
 | --- | --- |
@@ -46,7 +66,7 @@ Signature: `FALO x Force Cheng 2026/5/6`
 | 公開版隱私整理 | 保留原版脈絡與命名，但移除不必要的私有路徑與環境識別資訊。 |
 | GitHub-ready 展示 | 讓 Markdown、HTML、Excel 都可以直接作為 GitHub 展示與教學底稿。 |
 
-## 4. 已知升版歷程
+## 5. 已知升版歷程
 
 | 版本 | 升版重點 |
 | --- | --- |
@@ -58,7 +78,7 @@ Signature: `FALO x Force Cheng 2026/5/6`
 | `v0.10` | 以 `v0.09c` 為基底整理發佈版，建立備份與對外交付版本，並持續收納新候選條目。 |
 | `v0.11` | 推出高度參考原版的 GitHub-ready 隱私版，新增 `PM11`、`IM` 系列與公開版隱私邊界。 |
 
-## 5. PM11｜AI Delivery Bridge
+## 6. PM11｜AI Delivery Bridge
 
 - 類型：`Module`
 - 系列：`PM`
@@ -82,26 +102,26 @@ Signature: `FALO x Force Cheng 2026/5/6`
 - 不是把 FALO 綁死在單一 AI 平台
 - 重點是「AI 如何從對話走到交付」
 
-## 6. IM 系列｜Local-first IM System
+## 7. IM 系列｜Local-first IM System
 
 ### 6.1 主系統
 
 | Code | 名稱 | 類型 | 一句話用途 |
 | --- | --- | --- | --- |
-| `IM01` | Local-first IM System | `System` | 以地端即時、雲端延遲保存為核心的 Browser IM 系統，用來教學、測試與展示多 client 協作。 |
+| `IM01` | Local-first IM Workbench | `System` | 把即時通訊、AI Client、Prompt 管理與資料閉環整合在地端工作台中，作為 Falo Communication OS 的 MVP 原型。 |
 
 ### 6.2 子元件群
 
 | Code | 名稱 | 類型 | 一句話用途 |
 | --- | --- | --- | --- |
-| `IM02` | Browser Client | `Module` | 提供人類或 AI 使用的瀏覽器介面，支援匿名進入、登入、room message、direct message 與 prompt 輔助操作。 |
+| `IM02` | Local-first IM Dev Client | `Module` | Local-first IM Dev 實作介面版，用來測試多人、多 client、AI 角色、Prompt 管理、資料閉環與延遲同步。 |
 | `IM03` | Local IM Server | `Module` | 作為地端中樞，負責接收 client 連線、管理在線狀態、轉送訊息並立即寫入本地紀錄。 |
 | `IM04` | Identity Module | `Module` | 把 `user_id`、`client_id` 與 session trace 分開管理，讓身份、登入入口與稽核線索可以被清楚教學與追蹤。 |
 | `IM05` | Message Router | `Module` | 判斷訊息是 room message 還是 direct message，並把它送到對應的 client 或 room 成員。 |
 | `IM06` | Local Message Log | `Module` | 把本地訊息紀錄作為第一真實來源，支援後續查詢、匯出與未來批量同步。 |
-| `IM07` | Admin View / Admin API | `Module` | 提供開發測試階段的管理視角，讓使用者能查看在線狀態、全域紀錄、room 管理與備份資訊。 |
-| `IM08` | Personal Prompt Manager | `Module` | 把個人 prompt 指令庫納入 IM 協作流程，支援儲存、下載、匯入與 trace 保留。 |
-| `IM09` | Backup Sync Queue | `Module` | 把本地資料封裝成可備份、可追蹤、可延後同步到雲端的閉環隊列。 |
+| `IM07` | Admin View / Admin API | `Module` | 提供開發測試 / 稽核視角，讓使用者能查看在線狀態、全域紀錄、連線資訊、IP / session / room 狀態與備份資訊。 |
+| `IM08` | Personal Prompt Manager | `Module` | 把 Prompt 新增、分類、搜尋、匯入匯出與帶入聊天室整合在個人 Prompt 管理器中。 |
+| `IM09` | Backup Sync Queue | `Module` | 把 JSON / Excel 匯出匯入、本機回灌、GAS Lite 部署包與 Google Sheet 延遲同步整理成資料閉環隊列。 |
 
 ### 6.3 為什麼 IM 系列值得獨立升版
 
@@ -118,14 +138,43 @@ Signature: `FALO x Force Cheng 2026/5/6`
 
 > 可教學、可顧問、可拆元件、可持續擴充的一整個場景型模型菜族群。
 
-## 7. 新增概念型模型菜
+### 6.4 Dev 實作介面版 vs 外部說明版
+
+這次我把兩份不同用途的頁面明確分開理解：
+
+- `apps/local-first-im/static/index.html`
+  這是 `Local-first IM Dev` 的實作介面版，偏操作、測試、稽核與多人 / 多 client 驗證。
+- `apps/local-first-im/docs/external-overview.html`
+  這是外部說明版，偏非工程讀者、教學展示與系統定位說明。
+
+這樣的分工很重要，因為它代表：
+
+- Dev 版負責驗證系統真的能跑
+- Overview 版負責讓外部讀者看懂這套系統是什麼
+
+### 6.5 這條 Workbench 的核心能力
+
+1. `IM / Room / Direct Message`
+   本機或區網聊天室、私訊、匿名 / 登入、多 client。
+2. `通訊錄與備註`
+   使用者、備註、狀態、在線連線管理。
+3. `Prompt 管理器`
+   Prompt 新增、分類、搜尋、匯入匯出、帶入聊天室。
+4. `資料閉環`
+   JSON / Excel 匯出匯入、本機回灌。
+5. `GAS Lite / Google Sheet 備份`
+   產生部署包、snapshot 推送、雲端延遲保存。
+6. `開發測試 / 稽核視角`
+   全員管理員、全域紀錄、連線資訊、IP / session / room 狀態。
+
+## 8. 新增概念型模型菜
 
 | Code | 名稱 | 一句話用途 |
 | --- | --- | --- |
 | `CC25` | AI to Delivery Bridge | AI 不只回答問題，還要能橋接到真實交付流程與工作環境。 |
 | `CC26` | Local-first Collaboration with Delayed Cloud Sync | 地端即時協作、雲端延遲保存，是一種可教學、可治理的系統邊界。 |
 
-## 8. 證據與來源
+## 9. 證據與來源
 
 這版公開顯示的來源，全部採 repo 相對路徑或公開敘事，不直接放本機絕對路徑。
 
@@ -134,6 +183,8 @@ Signature: `FALO x Force Cheng 2026/5/6`
 - `docs/mvp/local-first-im-browser-mvp.md`
 - `apps/local-first-im/README.md`
 - `apps/local-first-im/VERSION.md`
+- `apps/local-first-im/static/index.html`
+- `apps/local-first-im/docs/external-overview.html`
 - `apps/local-first-im/server.py`
 - `apps/local-first-im/run_local_im.command`
 
@@ -143,7 +194,7 @@ Signature: `FALO x Force Cheng 2026/5/6`
 - `docs/catalog/falo-model-dish-registry-v0.10.html`
 - `docs/catalog/FALO_Model_Dish_Registry_v0.10.xlsx`
 
-## 9. 受影響條目
+## 10. 受影響條目
 
 - `PM11`
 - `IM01`
@@ -158,6 +209,6 @@ Signature: `FALO x Force Cheng 2026/5/6`
 - `CC25`
 - `CC26`
 
-## 10. 署名
+## 11. 署名
 
 `FALO x Force Cheng 2026/5/6`
